@@ -5,16 +5,13 @@ import { useEffect, useRef, useState } from "react"
 import { useLanguage } from "../contexts/language/LanguageContext"
 import { toast } from "sonner"
 import { config } from "@/lib/config"
+import { useTheme } from "../hooks/use-theme"
 
 export default function Home() {
-  const [isDark, setIsDark] = useState(true)
+  const { isDark, toggleTheme, isLoaded } = useTheme()
   const [activeSection, setActiveSection] = useState("")
   const sectionsRef = useRef<(HTMLElement | null)[]>([])
   const { language, setLanguage, t } = useLanguage()
-
-  useEffect(() => {
-    document.documentElement.classList.toggle("dark", isDark)
-  }, [isDark])
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -36,9 +33,7 @@ export default function Home() {
     return () => observer.disconnect()
   }, [])
 
-  const toggleTheme = () => {
-    setIsDark(!isDark)
-  }
+
 
   const toggleLanguage = () => {
     setLanguage(language === 'en' ? 'pt' : 'en')

@@ -101,6 +101,18 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
         'nav.work': 'work',
         'nav.thoughts': 'thoughts',
         'nav.connect': 'connect',
+        
+        // Not Found Page
+        'not_found.title': 'Page Not Found',
+        'not_found.subtitle': '404',
+        'not_found.description': 'The page you are looking for does not exist or has been moved.',
+        'not_found.back_home': 'Back to Home',
+        'not_found.or': 'or',
+        'not_found.contact': 'contact me',
+        'not_found.if_need_help': 'if you need help.',
+        
+        // Loading
+        'loading.text': 'Loading...',
       },
       pt: {
         // Header
@@ -161,6 +173,18 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
         'nav.work': 'trabalho',
         'nav.thoughts': 'pensamentos',
         'nav.connect': 'conectar',
+        
+        // Not Found Page
+        'not_found.title': 'Página não encontrada',
+        'not_found.subtitle': '404',
+        'not_found.description': 'A página que você está procurando não existe ou foi movida.',
+        'not_found.back_home': 'Voltar ao início',
+        'not_found.or': 'ou',
+        'not_found.contact': 'entre em contato',
+        'not_found.if_need_help': 'se precisar de ajuda.',
+        
+        // Loading
+        'loading.text': 'Carregando...',
       }
     }
 

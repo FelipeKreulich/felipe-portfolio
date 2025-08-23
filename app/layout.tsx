@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { LanguageProvider } from "../contexts/language/LanguageContext";
 import ClientLayout from "../components/client/ClientLayout";
+import { ThemeScript } from "./theme-script";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -31,6 +32,9 @@ export default function RootLayout({
 }>) {
   return (
     <html className={`${inter.variable}`}>
+      <head>
+        <ThemeScript />
+      </head>
       <body className="font-sans antialiased">
         <LanguageProvider>
           <ClientLayout>
