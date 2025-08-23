@@ -40,6 +40,7 @@ export default function RootLayout({
         <LanguageProvider>
           <ClientLayout>
             {children}
+            <SpeedInsights />
           </ClientLayout>
         </LanguageProvider>
       </body>
