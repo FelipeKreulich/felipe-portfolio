@@ -4,6 +4,7 @@ import "./globals.css";
 import { LanguageProvider } from "../contexts/language/LanguageContext";
 import ClientLayout from "../components/client/ClientLayout";
 import { ThemeScript } from "./theme-script";
+import { SpeedInsights } from "@vercel/speed-insights/next"
 
 const inter = Inter({
   subsets: ["latin"],
