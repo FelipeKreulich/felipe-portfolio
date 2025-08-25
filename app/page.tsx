@@ -43,11 +43,21 @@ export default function Home() {
     toast(t('thoughts.feature_coming_soon'))
   }
 
+  const handleDownloadCV = () => {
+    const filename = language === 'pt' ? 'curriculo.pdf' : 'curriculoenglish.pdf'
+    const link = document.createElement('a')
+    link.href = `/${filename}`
+    link.download = filename
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+  }
+
   return (
     <div className="min-h-screen bg-background text-foreground relative">
       <nav className="fixed left-8 top-1/2 -translate-y-1/2 z-10 hidden lg:block">
         <div className="flex flex-col gap-4">
-          {["intro", "work", "thoughts", "connect"].map((section) => (
+          {["intro", "work", "projects", "thoughts", "connect", "about"].map((section) => (
             <button
               key={section}
               onClick={() => document.getElementById(section)?.scrollIntoView({ behavior: "smooth" })}
@@ -93,6 +103,30 @@ export default function Home() {
                     {t('intro.available')}
                   </div>
                   <div>{t('intro.location')}</div>
+                  <div>
+                    <button 
+                      onClick={handleDownloadCV}
+                      className="group p-2 rounded-lg border border-border hover:border-muted-foreground/50 transition-all duration-300 hover:bg-muted/50"
+                      title={language === 'pt' ? 'Baixar currículo em português' : 'Download CV in English'}
+                    >
+                      <span className="text-xs text-muted-foreground group-hover:text-foreground transition-colors duration-300 flex items-center gap-2">
+                        <svg 
+                          className="w-3 h-3" 
+                          fill="none" 
+                          stroke="currentColor" 
+                          viewBox="0 0 24 24"
+                        >
+                          <path 
+                            strokeLinecap="round" 
+                            strokeLinejoin="round" 
+                            strokeWidth={2} 
+                            d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" 
+                          />
+                        </svg>
+                        {t('intro.cv_download')}
+                      </span>
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -196,9 +230,107 @@ export default function Home() {
         </section>
 
         <section
-          id="thoughts"
+          id="projects"
           ref={(el) => {
             sectionsRef.current[2] = el as HTMLElement | null;
+          }}
+          className="min-h-screen py-32 opacity-0"
+        >
+          <div className="space-y-16">
+            <div className="text-center space-y-4">
+              <h2 className="text-4xl font-light">{t('projects.title')}</h2>
+              <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+                {t('projects.description')}
+              </p>
+            </div>
+
+            <div className="grid lg:grid-cols-3 gap-8">
+              {[
+                {
+                  title: t('projects.portfolio.title'),
+                  description: t('projects.portfolio.description'),
+                  tech: t('projects.portfolio.tech'),
+                  link: t('projects.portfolio.link'),
+                  color: 'from-blue-500/10 to-cyan-500/10 hover:from-blue-500/20 hover:to-cyan-500/20'
+                },
+                {
+                  title: t('projects.wormhole.title'),
+                  description: t('projects.wormhole.description'),
+                  tech: t('projects.wormhole.tech'),
+                  link: t('projects.wormhole.link'),
+                  color: 'from-purple-500/10 to-pink-500/10 hover:from-purple-500/20 hover:to-pink-500/20'
+                },
+                {
+                  title: t('projects.blog.title'),
+                  description: t('projects.blog.description'),
+                  tech: t('projects.blog.tech'),
+                  link: t('projects.blog.link'),
+                  color: 'from-green-500/10 to-emerald-500/10 hover:from-green-500/20 hover:to-emerald-500/20'
+                }
+              ].map((project, index) => (
+                <div
+                  key={index}
+                  className="group relative bg-gradient-to-br from-background via-background/80 to-muted/20 backdrop-blur-sm border border-border/50 rounded-xl p-6 hover:border-muted-foreground/50 transition-all duration-500 hover:shadow-xl hover:-translate-y-1"
+                >
+                  {/* Efeito de brilho no hover */}
+                  <div className={`absolute inset-0 bg-gradient-to-br ${project.color} opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl`}></div>
+                  
+                  <div className="relative z-10 space-y-4">
+                    <div className="space-y-2">
+                      <h3 className="text-xl font-medium text-foreground group-hover:text-foreground transition-colors duration-300">
+                        {project.title}
+                      </h3>
+                      <p className="text-muted-foreground leading-relaxed text-sm">
+                        {project.description}
+                      </p>
+                    </div>
+
+                    <div className="space-y-3">
+                      <div className="text-xs text-muted-foreground font-mono">{t('projects.technologies')}</div>
+                      <div className="flex flex-wrap gap-2">
+                        {project.tech.split(', ').map((tech, techIndex) => (
+                          <span
+                            key={techIndex}
+                            className="px-2 py-1 text-xs bg-muted/50 text-muted-foreground rounded border border-border/50 group-hover:border-muted-foreground/50 transition-colors duration-300"
+                          >
+                            {tech}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="pt-2">
+                      <button 
+                        onClick={handleReadMore}
+                        className="group inline-flex items-center gap-2 text-sm text-muted-foreground group-hover:text-foreground transition-colors duration-300 cursor-pointer hover:opacity-80"
+                      >
+                        <span>{project.link}</span>
+                        <svg
+                          className="w-4 h-4 transform group-hover:translate-x-1 transition-transform duration-300"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M17 8l4 4m0 0l-4 4m4-4H3"
+                          />
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section
+          id="thoughts"
+          ref={(el) => {
+            sectionsRef.current[3] = el as HTMLElement | null;
           }}
           className="min-h-screen py-32 opacity-0"
         >
@@ -277,7 +409,7 @@ export default function Home() {
         <section
           id="connect"
           ref={(el) => {
-            sectionsRef.current[3] = el as HTMLElement | null;
+            sectionsRef.current[4] = el as HTMLElement | null;
           }}
           className="py-32 opacity-0"
         >
@@ -292,7 +424,7 @@ export default function Home() {
 
                 <div className="space-y-4">
                   <Link
-                    href="mailto:jordan@example.com"
+                    href={`mailto:${t('connect.email')}`}
                     className="group flex items-center gap-3 text-foreground hover:text-muted-foreground transition-colors duration-300"
                   >
                     <span className="text-lg">{t('connect.email')}</span>
@@ -332,6 +464,99 @@ export default function Home() {
                     </div>
                   </Link>
                 ))}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section
+          id="about"
+          ref={(el) => {
+            sectionsRef.current[5] = el as HTMLElement | null;
+          }}
+          className="py-32 opacity-0"
+        >
+          <div className="space-y-16">
+            <h2 className="text-4xl font-light text-center">{t('about.title')}</h2>
+            
+            <div className="max-w-4xl mx-auto">
+              <div className="relative group">
+                {/* Card Holográfico */}
+                <div className="relative bg-gradient-to-br from-background via-background/80 to-muted/20 backdrop-blur-sm border border-border/50 rounded-2xl p-8 shadow-2xl overflow-hidden">
+                  {/* Efeito de brilho holográfico */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 animate-pulse"></div>
+                  <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-purple-500/10 to-pink-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-1000"></div>
+                  
+                  <div className="relative z-10 grid lg:grid-cols-2 gap-8 items-center">
+                    {/* Foto */}
+                    <div className="relative">
+                      <div className="relative w-64 h-64 mx-auto lg:mx-0">
+                        <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 via-purple-500/20 to-pink-500/20 rounded-full blur-xl group-hover:blur-2xl transition-all duration-500"></div>
+                        <img 
+                          src="/eu.png" 
+                          alt="Felipe Kreulich" 
+                          className="relative w-full h-full object-cover rounded-full border-4 border-border/50 group-hover:border-muted-foreground/50 transition-all duration-500 shadow-2xl"
+                        />
+                        {/* Efeito de brilho na foto */}
+                        <div className="absolute inset-0 rounded-full bg-gradient-to-br from-transparent via-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                      </div>
+                    </div>
+
+                    {/* Informações */}
+                    <div className="space-y-6 text-center lg:text-left">
+                      <div>
+                        <p className="text-lg text-muted-foreground leading-relaxed">
+                          {t('about.description')}
+                        </p>
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <div className="text-sm text-muted-foreground font-mono">{t('about.age')}</div>
+                          <div className="text-foreground font-medium">{t('about.age_value')}</div>
+                        </div>
+                        
+                        <div className="space-y-2">
+                          <div className="text-sm text-muted-foreground font-mono">Location</div>
+                          <div className="text-foreground font-medium">{t('about.location_full')}</div>
+                        </div>
+                        
+                        <div className="space-y-2">
+                          <div className="text-sm text-muted-foreground font-mono">{t('about.interests')}</div>
+                          <div className="text-foreground font-medium text-sm">{t('about.interests_list')}</div>
+                        </div>
+                        
+                        <div className="space-y-2">
+                          <div className="text-sm text-muted-foreground font-mono">{t('about.available_for')}</div>
+                          <div className="text-foreground font-medium text-sm">{t('about.available_for_value')}</div>
+                        </div>
+                      </div>
+
+                      {/* Botão de download do CV */}
+                      <div className="pt-4">
+                        <button 
+                          onClick={handleDownloadCV}
+                          className="group inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-500/10 to-purple-500/10 hover:from-blue-500/20 hover:to-purple-500/20 border border-border/50 hover:border-muted-foreground/50 rounded-lg transition-all duration-300 hover:shadow-lg"
+                        >
+                          <svg 
+                            className="w-4 h-4" 
+                            fill="none" 
+                            stroke="currentColor" 
+                            viewBox="0 0 24 24"
+                          >
+                            <path 
+                              strokeLinecap="round" 
+                              strokeLinejoin="round" 
+                              strokeWidth={2} 
+                              d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" 
+                            />
+                          </svg>
+                          <span>{t('intro.cv_download')}</span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

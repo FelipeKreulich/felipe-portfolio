@@ -53,6 +53,7 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
         'intro.human_behavior': 'human behavior',
         'intro.available': 'Available for work',
         'intro.location': 'Lisboa, Portugal',
+        'intro.cv_download': 'Download CV',
         'intro.currently': 'CURRENTLY',
         'intro.role': 'Full Stack Developer',
         'intro.company': '@ POP Tecnologia e Mobilidade',
@@ -71,6 +72,23 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
         'work.pop.role': 'Full Stack Developer',
         'work.pop.company': 'POP Tecnologia e Mobilidade',
         'work.pop.description': 'I cannot say much about the project, but it was a very rewarding experience.',
+        
+        // Projects Section
+        'projects.title': 'Featured Projects',
+        'projects.description': 'A selection of my recent work and personal projects.',
+        'projects.portfolio.title': 'Portfolio Website',
+        'projects.portfolio.description': 'Modern portfolio built with Next.js, TypeScript, and Tailwind CSS. Features dark/light theme, multilingual support, and responsive design.',
+        'projects.portfolio.tech': 'Next.js, TypeScript, Tailwind CSS',
+        'projects.portfolio.link': 'View Project',
+        'projects.wormhole.title': 'Worm Hole',
+        'projects.wormhole.description': 'Worm Hole is a personal project I developed: a platform for secure file transfer and sharing through links. I transformed it into a SaaS, currently in testing phase, and will be available soon for everyone.',
+        'projects.wormhole.tech': 'Next.JS, TypeScript, Tailwind CSS, Prisma, NeonDB, Vercel, MySQL',
+        'projects.wormhole.link': 'View Project',
+        'projects.blog.title': 'Personal Blog',
+        'projects.blog.description': 'Personal blog built with Next.js, TypeScript, and Tailwind CSS. Features dark/light theme, multilingual support, and responsive design.',
+        'projects.blog.tech': 'Next.js, TypeScript, Tailwind CSS, Prisma, NeonDB, Vercel, MySQL',
+        'projects.blog.link': 'View Project',
+        'projects.technologies': 'Technologies',
         
         // Thoughts Section
         'thoughts.title': 'Recent Thoughts',
@@ -91,6 +109,17 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
         'connect.email': 'contato.felipe.kreulich@gmail.com',
         'connect.elsewhere': 'ELSEWHERE',
         
+        // About Section
+        'about.title': 'About Me',
+        'about.description': 'A passionate developer who loves to create meaningful digital experiences.',
+        'about.age': 'Age',
+        'about.age_value': '23 years',
+        'about.location_full': 'Lisboa, Portugal',
+        'about.interests': 'Interests',
+        'about.interests_list': 'Technology, Design, Music, Travel',
+        'about.available_for': 'Available for',
+        'about.available_for_value': 'Freelance & Full-time',
+        
         // Footer
         'footer.copyright': '© 2025 Felipe Kreulich. All rights reserved.',
         'footer.built_with': 'Built with ❤️ by Felipe Kreulich',
@@ -99,8 +128,10 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
         // Navigation
         'nav.intro': 'intro',
         'nav.work': 'work',
+        'nav.projects': 'projects',
         'nav.thoughts': 'thoughts',
         'nav.connect': 'connect',
+        'nav.about': 'about',
         
         // Not Found Page
         'not_found.title': 'Page Not Found',
@@ -125,6 +156,7 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
         'intro.human_behavior': 'comportamento humano',
         'intro.available': 'Disponível para trabalho',
         'intro.location': 'Lisboa, Portugal',
+        'intro.cv_download': 'Download CV',
         'intro.currently': 'ATUALMENTE',
         'intro.role': 'Full Stack Developer',
         'intro.company': '@ POP Tecnologia e Mobilidade',
@@ -133,7 +165,7 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
         
         // Work Section
         'work.title': 'Trabalhos Selecionados',
-        'work.period': '2023 — 2025',
+        'work.period': '2021 — 2025',
         'work.army.role': 'Suporte Técnico e Desenvolvedor Full Stack',
         'work.army.company': '9º Batalhão de Polícia do Exército',
         'work.army.description': 'Atuei como Suporte Técnico e Desenvolvedor Full Stack. Prestava suporte técnico aos colaboradores e desenvolvia soluções para o dia a dia do batalhão.',
@@ -143,6 +175,23 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
         'work.pop.role': 'Desenvolvedor Full Stack',
         'work.pop.company': 'POP Tecnologia e Mobilidade',
         'work.pop.description': 'Atuei como Desenvolvedor Full Stack. Não posso dizer muito sobre o projeto, mas foi uma experiência muito gratificante.',
+        
+        // Projects Section
+        'projects.title': 'Projetos em Destaque',
+        'projects.description': 'Uma seleção dos meus trabalhos recentes e projetos pessoais.',
+        'projects.portfolio.title': 'Website Portfolio',
+        'projects.portfolio.description': 'Portfolio moderno construído com Next.js, TypeScript e Tailwind CSS. Inclui tema escuro/claro, suporte multilíngue e design responsivo.',
+        'projects.portfolio.tech': 'Next.js, TypeScript, Tailwind CSS',
+        'projects.portfolio.link': 'Ver Projeto',
+        'projects.wormhole.title': 'Worm Hole',
+        'projects.wormhole.description': 'Worm Hole é um projeto pessoal que desenvolvi: uma plataforma para transferência e envio de arquivos através de links seguros. Transformei-o em um SaaS, atualmente em fase de testes, e em breve estará disponível para todos.',
+        'projects.wormhole.tech': 'Next.JS, TypeScript, Tailwind CSS, Prisma, NeonDB, Vercel, MySQL',
+        'projects.wormhole.link': 'Ver Projeto',
+        'projects.blog.title': 'Blog Pessoal',
+        'projects.blog.description': 'Blog pessoal construído com Next.js, TypeScript e Tailwind CSS. Inclui tema escuro/claro, suporte multilíngue e design responsivo.',
+        'projects.blog.tech': 'Next.js, TypeScript, Tailwind CSS, Prisma, NeonDB, Vercel, MySQL',
+        'projects.blog.link': 'Ver Projeto',
+        'projects.technologies': 'Tecnologias',
         
         // Thoughts Section
         'thoughts.title': 'Pensamentos Recentes',
@@ -163,6 +212,17 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
         'connect.email': 'contato.felipe.kreulich@gmail.com',
         'connect.elsewhere': 'OUTROS SÍTIOS',
         
+        // About Section
+        'about.title': 'Sobre Mim',
+        'about.description': 'Um desenvolvedor apaixonado que adora criar experiências digitais significativas.',
+        'about.age': 'Idade',
+        'about.age_value': '23 anos',
+        'about.location_full': 'Lisboa, Portugal',
+        'about.interests': 'Interesses',
+        'about.interests_list': 'Tecnologia, Design, Música, Viagens',
+        'about.available_for': 'Disponível para',
+        'about.available_for_value': 'Freelance & Tempo integral',
+        
         // Footer
         'footer.copyright': '© 2025 Felipe Kreulich. Todos os direitos reservados.',
         'footer.built_with': 'Construído com ❤️ por Felipe Kreulich',
@@ -171,8 +231,10 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
         // Navigation
         'nav.intro': 'introdução',
         'nav.work': 'trabalho',
+        'nav.projects': 'projetos',
         'nav.thoughts': 'pensamentos',
         'nav.connect': 'conectar',
+        'nav.about': 'sobre',
         
         // Not Found Page
         'not_found.title': 'Página não encontrada',
