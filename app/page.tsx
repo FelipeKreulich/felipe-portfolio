@@ -53,16 +53,39 @@ export default function Home() {
     document.body.removeChild(link)
   }
 
+  const getActiveSectionPosition = () => {
+    if (!activeSection) return 0
+    
+    const sections = ["intro", "work", "projects", "thoughts", "connect", "about"]
+    const activeIndex = sections.indexOf(activeSection)
+    
+    // Cada botão tem 32px (h-8) + 16px (gap-4) = 48px total
+    // O primeiro botão está na posição 0
+    return activeIndex * 48
+  }
+
   return (
     <div className="min-h-screen bg-background text-foreground relative">
       <nav className="fixed left-8 top-1/2 -translate-y-1/2 z-10 hidden lg:block">
-        <div className="flex flex-col gap-4">
-          {["intro", "work", "projects", "thoughts", "connect", "about"].map((section) => (
+        <div className="relative flex flex-col gap-4">
+          {/* Indicador de seção ativa com blur branco */}
+          <div 
+            className="absolute left-0 w-2 h-8 bg-gradient-to-b from-white/30 via-white/20 to-white/10 backdrop-blur-md rounded-full transition-all duration-1200 ease-out shadow-lg shadow-white/20"
+            style={{
+              transform: `translateY(${getActiveSectionPosition()}px)`,
+              opacity: activeSection ? 1 : 0,
+              transitionDelay: '100ms'
+            }}
+          />
+          
+          {["intro", "work", "projects", "thoughts", "connect", "about"].map((section, index) => (
             <button
               key={section}
               onClick={() => document.getElementById(section)?.scrollIntoView({ behavior: "smooth" })}
-              className={`w-2 h-8 rounded-full transition-all duration-500 ${
-                activeSection === section ? "bg-foreground" : "bg-muted-foreground/30 hover:bg-muted-foreground/60"
+              className={`relative w-2 h-8 rounded-full transition-all duration-700 ${
+                activeSection === section 
+                  ? "bg-foreground shadow-lg shadow-white/20" 
+                  : "bg-muted-foreground/30 hover:bg-muted-foreground/60 hover:shadow-md hover:shadow-white/10"
               }`}
               aria-label={`Navigate to ${t(`nav.${section}`)}`}
             />
@@ -147,9 +170,27 @@ export default function Home() {
                   {["React", "TypeScript", "Next.js", "PHP", "Laravel", "MySQL", "Design Systems", "UX/UI", "CyberSecurity"].map((skill) => (
                     <span
                       key={skill}
-                      className="px-3 py-1 text-xs border border-border rounded-full hover:border-muted-foreground/50 transition-colors duration-300"
+                      className={`px-3 py-1 text-xs border rounded-full transition-all duration-300 ${
+                        skill === "CyberSecurity" 
+                          ? "relative overflow-hidden bg-gradient-to-r from-amber-500/20 to-yellow-500/20 border-amber-500/50 hover:border-amber-400 hover:from-amber-500/30 hover:to-yellow-500/30 hover:shadow-lg hover:shadow-amber-500/25 group" 
+                          : "border border-border hover:border-muted-foreground/50"
+                      }`}
                     >
-                      {skill}
+                      {skill === "CyberSecurity" && (
+                        <>
+                          {/* Borda giratória dourada */}
+                          <div className="absolute inset-0 rounded-full border-2 border-transparent bg-gradient-to-r from-amber-400 via-yellow-400 via-orange-400 to-amber-400 bg-[length:200%_200%] group-hover:animate-spin-slow opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                          {/* Borda interna para cobrir o centro */}
+                          <div className="absolute inset-[2px] rounded-full bg-background"></div>
+                          {/* Efeito de brilho pulsante */}
+                          <div className="absolute inset-0 rounded-full bg-gradient-to-r from-amber-300/20 via-yellow-300/20 to-amber-300/20 opacity-0 group-hover:opacity-100 group-hover:animate-pulse transition-all duration-500"></div>
+                          {/* Conteúdo do texto */}
+                          <span className="relative z-10 text-amber-600 dark:text-amber-400 group-hover:text-amber-500 transition-colors duration-300 font-medium">
+                            {skill}
+                          </span>
+                        </>
+                      )}
+                      {skill !== "CyberSecurity" && skill}
                     </span>
                   ))}
                 </div>

@@ -139,4 +139,23 @@
       transform: translateY(0);
     }
   }
+
+  /* Custom slow spin animation for CyberSecurity button */
+  .animate-spin-slow {
+    animation: spinSlow 3s linear infinite;
+  }
+
+  @keyframes spinSlow {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  /* Custom duration utilities */
+  .duration-1200 {
+    transition-duration: 1200ms;
+  }
 }
