@@ -2,6 +2,7 @@
 
 import Link from "next/link"
 import { useEffect, useRef, useState } from "react"
+import { motion, useScroll, useTransform, useSpring, useInView } from "framer-motion"
 import { useLanguage } from "../contexts/language/LanguageContext"
 import { toast } from "sonner"
 import { config } from "@/lib/config"
@@ -55,12 +56,9 @@ export default function Home() {
 
   const getActiveSectionPosition = () => {
     if (!activeSection) return 0
-    
-    const sections = ["intro", "work", "projects", "thoughts", "connect", "about"]
+
+    const sections = ["intro", "about", "work", "projects", "thoughts", "connect"]
     const activeIndex = sections.indexOf(activeSection)
-    
-    // Cada botão tem 32px (h-8) + 16px (gap-4) = 48px total
-    // O primeiro botão está na posição 0
     return activeIndex * 48
   }
 
@@ -69,7 +67,7 @@ export default function Home() {
       <nav className="fixed left-8 top-1/2 -translate-y-1/2 z-10 hidden lg:block">
         <div className="relative flex flex-col gap-4">
           {/* Indicador de seção ativa com blur branco */}
-          <div 
+          <div
             className="absolute left-0 w-2 h-8 bg-gradient-to-b from-white/30 via-white/20 to-white/10 backdrop-blur-md rounded-full transition-all duration-1200 ease-out shadow-lg shadow-white/20"
             style={{
               transform: `translateY(${getActiveSectionPosition()}px)`,
@@ -77,16 +75,15 @@ export default function Home() {
               transitionDelay: '100ms'
             }}
           />
-          
-          {["intro", "work", "projects", "thoughts", "connect", "about"].map((section, index) => (
+
+          {["intro", "about", "work", "projects", "thoughts", "connect"].map((section, index) => (
             <button
               key={section}
               onClick={() => document.getElementById(section)?.scrollIntoView({ behavior: "smooth" })}
-              className={`relative w-2 h-8 rounded-full transition-all duration-700 ${
-                activeSection === section 
-                  ? "bg-foreground shadow-lg shadow-white/20" 
+              className={`relative w-2 h-8 rounded-full transition-all duration-700 ${activeSection === section
+                  ? "bg-foreground shadow-lg shadow-white/20"
                   : "bg-muted-foreground/30 hover:bg-muted-foreground/60 hover:shadow-md hover:shadow-white/10"
-              }`}
+                }`}
               aria-label={`Navigate to ${t(`nav.${section}`)}`}
             />
           ))}
@@ -94,64 +91,120 @@ export default function Home() {
       </nav>
 
       <main className="max-w-4xl mx-auto px-8 lg:px-16">
-        <header
+        <motion.header
           id="intro"
           ref={(el) => {
             sectionsRef.current[0] = el
           }}
-          className="min-h-screen flex items-center opacity-0"
+          className="min-h-screen flex items-center"
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
         >
           <div className="grid lg:grid-cols-5 gap-16 w-full">
             <div className="lg:col-span-3 space-y-8">
-              <div className="space-y-2">
-                <div className="text-sm text-muted-foreground font-mono tracking-wider">{t('portfolio.year')}</div>
-                <h1 className="text-6xl lg:text-7xl font-light tracking-tight">
+              <motion.div
+                className="space-y-2"
+                initial={{ opacity: 0, x: -50 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
+              >
+                <motion.div
+                  className="text-sm text-muted-foreground font-mono tracking-wider"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 0.4 }}
+                >
+                  {t('portfolio.year')}
+                </motion.div>
+                <motion.h1
+                  className="text-6xl lg:text-7xl font-light tracking-tight"
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 1, delay: 0.6, ease: "easeOut" }}
+                >
                   {t('intro.title')}
                   <br />
                   <span className="text-muted-foreground">{t('intro.subtitle')}</span>
-                </h1>
-              </div>
+                </motion.h1>
+              </motion.div>
 
-              <div className="space-y-6 max-w-md">
-                <p className="text-xl text-muted-foreground leading-relaxed">
+              <motion.div
+                className="space-y-6 max-w-md"
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.8, ease: "easeOut" }}
+              >
+                <motion.p
+                  className="text-xl text-muted-foreground leading-relaxed"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, delay: 1, ease: "easeOut" }}
+                >
                   {t('intro.description')}
                   <span className="text-foreground"> {t('intro.design')}</span>,<span className="text-foreground"> {t('intro.technology')}</span>,
-                  and
+                  {t('intro.and')}
                   <span className="text-foreground"> {t('intro.human_behavior')}</span>.
-                </p>
+                </motion.p>
 
-                <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                  <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                <motion.div
+                  className="flex items-center gap-4 text-sm text-muted-foreground"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, delay: 1.2, ease: "easeOut" }}
+                >
+                  <motion.div
+                    className="flex items-center gap-2"
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.6, delay: 1.4 }}
+                  >
+                    <motion.div
+                      className="w-2 h-2 bg-green-500 rounded-full"
+                      animate={{ scale: [1, 1.2, 1] }}
+                      transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                    />
                     {t('intro.available')}
-                  </div>
-                  <div>{t('intro.location')}</div>
-                  <div>
-                    <button 
+                  </motion.div>
+                  <motion.div
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.6, delay: 1.5 }}
+                  >
+                    {t('intro.location')}
+                  </motion.div>
+                  <motion.div
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.6, delay: 1.6 }}
+                  >
+                    <motion.button
                       onClick={handleDownloadCV}
                       className="group p-2 rounded-lg border border-border hover:border-muted-foreground/50 transition-all duration-300 hover:bg-muted/50"
                       title={language === 'pt' ? 'Baixar currículo em português' : 'Download CV in English'}
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
                     >
                       <span className="text-xs text-muted-foreground group-hover:text-foreground transition-colors duration-300 flex items-center gap-2">
-                        <svg 
-                          className="w-3 h-3" 
-                          fill="none" 
-                          stroke="currentColor" 
+                        <svg
+                          className="w-3 h-3"
+                          fill="none"
+                          stroke="currentColor"
                           viewBox="0 0 24 24"
                         >
-                          <path 
-                            strokeLinecap="round" 
-                            strokeLinejoin="round" 
-                            strokeWidth={2} 
-                            d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" 
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
                           />
                         </svg>
                         {t('intro.cv_download')}
                       </span>
-                    </button>
-                  </div>
-                </div>
-              </div>
+                    </motion.button>
+                  </motion.div>
+                </motion.div>
+              </motion.div>
             </div>
 
             <div className="lg:col-span-2 flex flex-col justify-end space-y-8">
@@ -170,16 +223,15 @@ export default function Home() {
                   {["React", "TypeScript", "Next.js", "PHP", "Laravel", "MySQL", "Design Systems", "UX/UI", "CyberSecurity"].map((skill) => (
                     <span
                       key={skill}
-                      className={`px-3 py-1 text-xs border rounded-full transition-all duration-300 ${
-                        skill === "CyberSecurity" 
-                          ? "relative overflow-hidden bg-gradient-to-r from-amber-500/20 to-yellow-500/20 border-amber-500/50 hover:border-amber-400 hover:from-amber-500/30 hover:to-yellow-500/30 hover:shadow-lg hover:shadow-amber-500/25 group" 
+                      className={`px-3 py-1 text-xs border rounded-full transition-all duration-300 ${skill === "CyberSecurity"
+                          ? "relative overflow-hidden bg-gradient-to-r from-amber-500/20 to-yellow-500/20 border-amber-500/50 hover:border-amber-400 hover:from-amber-500/30 hover:to-yellow-500/30 hover:shadow-lg hover:shadow-amber-500/25 group"
                           : "border border-border hover:border-muted-foreground/50"
-                      }`}
+                        }`}
                     >
                       {skill === "CyberSecurity" && (
                         <>
                           {/* Borda giratória dourada */}
-                          <div className="absolute inset-0 rounded-full border-2 border-transparent bg-gradient-to-r from-amber-400 via-yellow-400 via-orange-400 to-amber-400 bg-[length:200%_200%] group-hover:animate-spin-slow opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                          <div className="absolute inset-0 rounded-full border-2 border-transparent bg-gradient-to-r from-amber-400 via-yellow-400 to-orange-400 bg-[length:200%_200%] group-hover:animate-spin-slow opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                           {/* Borda interna para cobrir o centro */}
                           <div className="absolute inset-[2px] rounded-full bg-background"></div>
                           {/* Efeito de brilho pulsante */}
@@ -197,20 +249,277 @@ export default function Home() {
               </div>
             </div>
           </div>
-        </header>
+        </motion.header>
 
-        <section
-          id="work"
+        <motion.section
+          id="about"
           ref={(el) => {
-            sectionsRef.current[1] = el as HTMLElement;
+            sectionsRef.current[1] = el as HTMLElement | null;
           }}
-          className="min-h-screen py-32 opacity-0"
+          className="py-32"
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
         >
           <div className="space-y-16">
-            <div className="flex items-end justify-between">
-              <h2 className="text-4xl font-light">{t('work.title')}</h2>
-              <div className="text-sm text-muted-foreground font-mono">{t('work.period')}</div>
+            <motion.h2
+              className="text-4xl font-light text-center"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+            >
+              {t('about.title')}
+            </motion.h2>
+
+            <div className="max-w-4xl mx-auto">
+              <div className="relative group">
+                {/* Card Metálico */}
+                <div
+                  className="relative bg-gradient-to-br from-zinc-800 via-zinc-700 to-zinc-900 backdrop-blur-sm border border-zinc-600/50 rounded-2xl p-8 shadow-2xl overflow-hidden group/card"
+                  onMouseMove={(e) => {
+                    const rect = e.currentTarget.getBoundingClientRect()
+                    const x = ((e.clientX - rect.left) / rect.width) * 100
+                    const y = ((e.clientY - rect.top) / rect.height) * 100
+                    e.currentTarget.style.setProperty('--mouse-x', `${x}%`)
+                    e.currentTarget.style.setProperty('--mouse-y', `${y}%`)
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.setProperty('--mouse-x', '50%')
+                    e.currentTarget.style.setProperty('--mouse-y', '50%')
+                  }}
+                  style={{
+                    '--mouse-x': '50%',
+                    '--mouse-y': '50%'
+                  } as React.CSSProperties}
+                >
+
+
+                  {/* Base metálica com textura */}
+                  <div className="absolute inset-0 opacity-0 group-hover/card:opacity-100 transition-opacity duration-300">
+                    <div
+                      className="absolute inset-0 rounded-2xl"
+                      style={{
+                        background: `linear-gradient(135deg, 
+                          rgba(192, 192, 192, 0.1) 0%, 
+                          rgba(255, 255, 255, 0.2) 25%, 
+                          rgba(192, 192, 192, 0.1) 50%, 
+                          rgba(128, 128, 128, 0.1) 75%, 
+                          rgba(192, 192, 192, 0.1) 100%)`
+                      }}
+                    />
+                  </div>
+
+                  {/* Efeito holográfico colorido */}
+                  <div className="absolute inset-0 opacity-0 group-hover/card:opacity-100 transition-opacity duration-400 mix-blend-screen">
+                    <div
+                      className="absolute inset-0 rounded-2xl"
+                      style={{
+                        background: `radial-gradient(ellipse at var(--mouse-x) var(--mouse-y), 
+                          rgba(220, 160, 225, 0.2) 0%, 
+                          rgba(30, 210, 220, 0.15) 30%, 
+                          rgba(60, 230, 65, 0.15) 60%, 
+                          transparent 80%)`
+                      }}
+                    />
+                  </div>
+
+
+
+                  {/* Reflexão metálica principal */}
+                  <div className="absolute inset-0 opacity-0 group-hover/card:opacity-100 transition-opacity duration-400 mix-blend-overlay">
+                    <div
+                      className="absolute inset-0 rounded-2xl"
+                      style={{
+                        background: `radial-gradient(ellipse at var(--mouse-x) var(--mouse-y), 
+                          rgba(255, 255, 255, 0.4) 0%, 
+                          rgba(255, 255, 255, 0.1) 40%, 
+                          transparent 70%)`
+                      }}
+                    />
+                  </div>
+
+                  {/* Reflexão secundária (inversa) */}
+                  <div className="absolute inset-0 opacity-0 group-hover/card:opacity-100 transition-opacity duration-500 mix-blend-overlay">
+                    <div
+                      className="absolute inset-0 rounded-2xl"
+                      style={{
+                        background: `radial-gradient(ellipse at calc(100% - var(--mouse-x)) calc(100% - var(--mouse-y)), 
+                          rgba(0, 0, 0, 0.2) 0%, 
+                          rgba(0, 0, 0, 0.05) 40%, 
+                          transparent 70%)`
+                      }}
+                    />
+                  </div>
+
+                  {/* Brilho metálico dinâmico */}
+                  <div className="absolute inset-0 opacity-0 group-hover/card:opacity-100 transition-opacity duration-300 mix-blend-soft-light">
+                    <div
+                      className="absolute inset-0 rounded-2xl"
+                      style={{
+                        background: `linear-gradient(calc(var(--mouse-x) * 3.6deg), 
+                          transparent 0%, 
+                          rgba(255, 255, 255, 0.3) 50%, 
+                          transparent 100%)`
+                      }}
+                    />
+                  </div>
+
+                  {/* Gradiente holográfico linear */}
+                  <div className="absolute inset-0 opacity-0 group-hover/card:opacity-100 transition-opacity duration-500 mix-blend-screen">
+                    <div
+                      className="absolute inset-0 rounded-2xl"
+                      style={{
+                        background: `linear-gradient(calc(var(--mouse-x) * 3.6deg), 
+                          rgba(220, 160, 225, 0.1), 
+                          rgba(30, 210, 220, 0.1), 
+                          rgba(140, 145, 255, 0.1))`
+                      }}
+                    />
+                  </div>
+
+                  {/* Textura metálica sutil */}
+                  <div className="absolute inset-0 opacity-0 group-hover/card:opacity-100 transition-opacity duration-600 mix-blend-multiply">
+                    <div
+                      className="absolute inset-0 rounded-2xl"
+                      style={{
+                        background: `repeating-linear-gradient(
+                          45deg,
+                          transparent,
+                          transparent 2px,
+                          rgba(255, 255, 255, 0.02) 2px,
+                          rgba(255, 255, 255, 0.02) 4px
+                        )`
+                      }}
+                    />
+                  </div>
+
+
+
+                  <div className="relative z-10 grid lg:grid-cols-2 gap-8 items-center">
+                    {/* Foto */}
+                    <div className="relative">
+                      <div className="relative w-64 h-64 mx-auto lg:mx-0">
+                        {/* Efeito holográfico na foto */}
+                        <div className="absolute inset-0 bg-gradient-to-br from-purple-500/30 via-cyan-500/20 to-green-500/30 rounded-full blur-xl group-hover:blur-2xl transition-all duration-500 mix-blend-screen"></div>
+                        <div className="absolute inset-0 bg-gradient-to-tl from-cyan-500/25 via-transparent to-purple-500/25 rounded-full blur-lg group-hover:blur-xl transition-all duration-500 mix-blend-overlay"></div>
+
+                        <img
+                          src="/eu.png"
+                          alt="Felipe Kreulich"
+                          className="relative w-full h-full object-cover rounded-full border-4 border-border/50 group-hover:border-muted-foreground/50 transition-all duration-500 shadow-2xl"
+                        />
+
+                        {/* Efeito de brilho holográfico na foto */}
+                        <div className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 mix-blend-overlay">
+                          <div className="absolute inset-0 bg-gradient-to-br from-transparent via-white/30 to-transparent rounded-full"></div>
+                          <div className="absolute inset-0 bg-gradient-to-tl from-transparent via-cyan-500/20 to-transparent rounded-full"></div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Informações */}
+                    <div className="space-y-6 text-center lg:text-left">
+                      <div>
+                        <p className="text-lg text-muted-foreground leading-relaxed">
+                          {t('about.description')}
+                        </p>
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <div className="text-sm text-muted-foreground font-mono">{t('about.age')}</div>
+                          <div className="text-foreground font-medium">{t('about.age_value')}</div>
+                        </div>
+
+                        <div className="space-y-2">
+                          <div className="text-sm text-muted-foreground font-mono">Location</div>
+                          <div className="text-foreground font-medium">{t('about.location_full')}</div>
+                        </div>
+
+                        <div className="space-y-2">
+                          <div className="text-sm text-muted-foreground font-mono">{t('about.interests')}</div>
+                          <div className="text-foreground font-medium text-sm">{t('about.interests_list')}</div>
+                        </div>
+
+                        <div className="space-y-2">
+                          <div className="text-sm text-muted-foreground font-mono">{t('about.available_for')}</div>
+                          <div className="text-foreground font-medium text-sm">{t('about.available_for_value')}</div>
+                        </div>
+                      </div>
+
+                      {/* Botão de download do CV */}
+                      <div className="pt-4">
+                        <button
+                          onClick={handleDownloadCV}
+                          className="group inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-500/10 via-cyan-500/10 to-green-500/10 hover:from-purple-500/20 hover:via-cyan-500/20 hover:to-green-500/20 border border-border/50 hover:border-muted-foreground/50 rounded-lg transition-all duration-300 hover:shadow-lg relative overflow-hidden"
+                        >
+                          {/* Efeito holográfico no botão */}
+                          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-pulse"></div>
+                          <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 via-cyan-500/10 to-green-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 mix-blend-screen"></div>
+                          <svg
+                            className="w-4 h-4 relative z-10"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                            />
+                          </svg>
+                          <span className="relative z-10">{t('intro.cv_download')}</span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
+          </div>
+        </motion.section>
+
+        <motion.section
+          id="work"
+          ref={(el) => {
+            sectionsRef.current[2] = el as HTMLElement;
+          }}
+          className="min-h-screen py-32"
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+        >
+          <div className="space-y-16">
+            <motion.div
+              className="flex items-end justify-between"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+            >
+              <motion.h2
+                className="text-4xl font-light"
+                initial={{ opacity: 0, x: -30 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8, delay: 0.4 }}
+              >
+                {t('work.title')}
+              </motion.h2>
+              <motion.div
+                className="text-sm text-muted-foreground font-mono"
+                initial={{ opacity: 0, x: 30 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8, delay: 0.6 }}
+              >
+                {t('work.period')}
+              </motion.div>
+            </motion.div>
 
             <div className="space-y-12">
               {[
@@ -236,9 +545,14 @@ export default function Home() {
                   tech: ["React", "TypeScript", "Next.js"],
                 },
               ].map((job, index) => (
-                <div
+                <motion.div
                   key={index}
                   className="group grid lg:grid-cols-12 gap-8 py-8 border-b border-border/50 hover:border-border transition-colors duration-500"
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.8, delay: index * 0.2 }}
+                  whileHover={{ scale: 1.02 }}
                 >
                   <div className="lg:col-span-2">
                     <div className="text-2xl font-light text-muted-foreground group-hover:text-foreground transition-colors duration-500">
@@ -264,26 +578,50 @@ export default function Home() {
                       </span>
                     ))}
                   </div>
-                </div>
+                </motion.div>
               ))}
             </div>
           </div>
-        </section>
+        </motion.section>
 
-        <section
+        <motion.section
           id="projects"
           ref={(el) => {
-            sectionsRef.current[2] = el as HTMLElement | null;
+            sectionsRef.current[3] = el as HTMLElement | null;
           }}
-          className="min-h-screen py-32 opacity-0"
+          className="min-h-screen py-32"
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
         >
           <div className="space-y-16">
-            <div className="text-center space-y-4">
-              <h2 className="text-4xl font-light">{t('projects.title')}</h2>
-              <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+            <motion.div
+              className="text-center space-y-4"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+            >
+              <motion.h2
+                className="text-4xl font-light"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8, delay: 0.4 }}
+              >
+                {t('projects.title')}
+              </motion.h2>
+              <motion.p
+                className="text-xl text-muted-foreground max-w-2xl mx-auto"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8, delay: 0.6 }}
+              >
                 {t('projects.description')}
-              </p>
-            </div>
+              </motion.p>
+            </motion.div>
 
             <div className="grid lg:grid-cols-3 gap-8">
               {[
@@ -309,13 +647,18 @@ export default function Home() {
                   color: 'from-green-500/10 to-emerald-500/10 hover:from-green-500/20 hover:to-emerald-500/20'
                 }
               ].map((project, index) => (
-                <div
+                <motion.div
                   key={index}
                   className="group relative bg-gradient-to-br from-background via-background/80 to-muted/20 backdrop-blur-sm border border-border/50 rounded-xl p-6 hover:border-muted-foreground/50 transition-all duration-500 hover:shadow-xl hover:-translate-y-1"
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.8, delay: index * 0.2 }}
+                  whileHover={{ scale: 1.02 }}
                 >
                   {/* Efeito de brilho no hover */}
                   <div className={`absolute inset-0 bg-gradient-to-br ${project.color} opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl`}></div>
-                  
+
                   <div className="relative z-10 space-y-4">
                     <div className="space-y-2">
                       <h3 className="text-xl font-medium text-foreground group-hover:text-foreground transition-colors duration-300">
@@ -341,7 +684,7 @@ export default function Home() {
                     </div>
 
                     <div className="pt-2">
-                      <button 
+                      <button
                         onClick={handleReadMore}
                         className="group inline-flex items-center gap-2 text-sm text-muted-foreground group-hover:text-foreground transition-colors duration-300 cursor-pointer hover:opacity-80"
                       >
@@ -362,16 +705,16 @@ export default function Home() {
                       </button>
                     </div>
                   </div>
-                </div>
+                </motion.div>
               ))}
             </div>
           </div>
-        </section>
+        </motion.section>
 
-        <section
+        <motion.section
           id="thoughts"
           ref={(el) => {
-            sectionsRef.current[3] = el as HTMLElement | null;
+            sectionsRef.current[4] = el as HTMLElement | null;
           }}
           className="min-h-screen py-32 opacity-0"
         >
@@ -445,12 +788,12 @@ export default function Home() {
               ))}
             </div>
           </div>
-        </section>
+        </motion.section>
 
-        <section
+        <motion.section
           id="connect"
           ref={(el) => {
-            sectionsRef.current[4] = el as HTMLElement | null;
+            sectionsRef.current[5] = el as HTMLElement | null;
           }}
           className="py-32 opacity-0"
         >
@@ -508,100 +851,7 @@ export default function Home() {
               </div>
             </div>
           </div>
-        </section>
-
-        <section
-          id="about"
-          ref={(el) => {
-            sectionsRef.current[5] = el as HTMLElement | null;
-          }}
-          className="py-32 opacity-0"
-        >
-          <div className="space-y-16">
-            <h2 className="text-4xl font-light text-center">{t('about.title')}</h2>
-            
-            <div className="max-w-4xl mx-auto">
-              <div className="relative group">
-                {/* Card Holográfico */}
-                <div className="relative bg-gradient-to-br from-background via-background/80 to-muted/20 backdrop-blur-sm border border-border/50 rounded-2xl p-8 shadow-2xl overflow-hidden">
-                  {/* Efeito de brilho holográfico */}
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 animate-pulse"></div>
-                  <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-purple-500/10 to-pink-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-1000"></div>
-                  
-                  <div className="relative z-10 grid lg:grid-cols-2 gap-8 items-center">
-                    {/* Foto */}
-                    <div className="relative">
-                      <div className="relative w-64 h-64 mx-auto lg:mx-0">
-                        <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 via-purple-500/20 to-pink-500/20 rounded-full blur-xl group-hover:blur-2xl transition-all duration-500"></div>
-                        <img 
-                          src="/eu.png" 
-                          alt="Felipe Kreulich" 
-                          className="relative w-full h-full object-cover rounded-full border-4 border-border/50 group-hover:border-muted-foreground/50 transition-all duration-500 shadow-2xl"
-                        />
-                        {/* Efeito de brilho na foto */}
-                        <div className="absolute inset-0 rounded-full bg-gradient-to-br from-transparent via-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                      </div>
-                    </div>
-
-                    {/* Informações */}
-                    <div className="space-y-6 text-center lg:text-left">
-                      <div>
-                        <p className="text-lg text-muted-foreground leading-relaxed">
-                          {t('about.description')}
-                        </p>
-                      </div>
-
-                      <div className="grid grid-cols-2 gap-4">
-                        <div className="space-y-2">
-                          <div className="text-sm text-muted-foreground font-mono">{t('about.age')}</div>
-                          <div className="text-foreground font-medium">{t('about.age_value')}</div>
-                        </div>
-                        
-                        <div className="space-y-2">
-                          <div className="text-sm text-muted-foreground font-mono">Location</div>
-                          <div className="text-foreground font-medium">{t('about.location_full')}</div>
-                        </div>
-                        
-                        <div className="space-y-2">
-                          <div className="text-sm text-muted-foreground font-mono">{t('about.interests')}</div>
-                          <div className="text-foreground font-medium text-sm">{t('about.interests_list')}</div>
-                        </div>
-                        
-                        <div className="space-y-2">
-                          <div className="text-sm text-muted-foreground font-mono">{t('about.available_for')}</div>
-                          <div className="text-foreground font-medium text-sm">{t('about.available_for_value')}</div>
-                        </div>
-                      </div>
-
-                      {/* Botão de download do CV */}
-                      <div className="pt-4">
-                        <button 
-                          onClick={handleDownloadCV}
-                          className="group inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-500/10 to-purple-500/10 hover:from-blue-500/20 hover:to-purple-500/20 border border-border/50 hover:border-muted-foreground/50 rounded-lg transition-all duration-300 hover:shadow-lg"
-                        >
-                          <svg 
-                            className="w-4 h-4" 
-                            fill="none" 
-                            stroke="currentColor" 
-                            viewBox="0 0 24 24"
-                          >
-                            <path 
-                              strokeLinecap="round" 
-                              strokeLinejoin="round" 
-                              strokeWidth={2} 
-                              d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" 
-                            />
-                          </svg>
-                          <span>{t('intro.cv_download')}</span>
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
+        </motion.section>
 
         <footer className="py-16 border-t border-border">
           <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-8">
