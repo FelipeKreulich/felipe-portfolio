@@ -13,6 +13,8 @@ export default function Home() {
   const [activeSection, setActiveSection] = useState("")
   const sectionsRef = useRef<(HTMLElement | null)[]>([])
   const { language, setLanguage, t } = useLanguage()
+  
+  const sections = ["intro", "about", "work", "projects", "thoughts", "calendar", "connect"]
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -32,6 +34,18 @@ export default function Home() {
     })
 
     return () => observer.disconnect()
+  }, [])
+
+  // Carregar script do Calendly
+  useEffect(() => {
+    const script = document.createElement('script')
+    script.src = 'https://assets.calendly.com/assets/external/widget.js'
+    script.async = true
+    document.body.appendChild(script)
+
+    return () => {
+      document.body.removeChild(script)
+    }
   }, [])
 
 
@@ -54,38 +68,33 @@ export default function Home() {
     document.body.removeChild(link)
   }
 
-  const getActiveSectionPosition = () => {
-    if (!activeSection) return 0
-
-    const sections = ["intro", "about", "work", "projects", "thoughts", "connect"]
-    const activeIndex = sections.indexOf(activeSection)
-    return activeIndex * 48
-  }
-
   return (
     <div className="min-h-screen bg-background text-foreground relative">
       <nav className="fixed left-8 top-1/2 -translate-y-1/2 z-10 hidden lg:block">
         <div className="relative flex flex-col gap-4">
-          {/* Indicador de seção ativa com blur branco */}
-          <div
-            className="absolute left-0 w-2 h-8 bg-gradient-to-b from-white/30 via-white/20 to-white/10 backdrop-blur-md rounded-full transition-all duration-1200 ease-out shadow-lg shadow-white/20"
-            style={{
-              transform: `translateY(${getActiveSectionPosition()}px)`,
-              opacity: activeSection ? 1 : 0,
-              transitionDelay: '100ms'
-            }}
-          />
 
-          {["intro", "about", "work", "projects", "thoughts", "connect"].map((section, index) => (
-            <button
-              key={section}
-              onClick={() => document.getElementById(section)?.scrollIntoView({ behavior: "smooth" })}
-              className={`relative w-2 h-8 rounded-full transition-all duration-700 ${activeSection === section
-                  ? "bg-foreground shadow-lg shadow-white/20"
-                  : "bg-muted-foreground/30 hover:bg-muted-foreground/60 hover:shadow-md hover:shadow-white/10"
-                }`}
-              aria-label={`Navigate to ${t(`nav.${section}`)}`}
-            />
+          {sections.map((section) => (
+            <div key={section} className="relative group">
+              <button
+                onClick={() => document.getElementById(section)?.scrollIntoView({ behavior: "smooth" })}
+                className={`relative w-2 h-8 rounded-full transition-all duration-700 ${activeSection === section
+                    ? "bg-foreground shadow-lg shadow-white/20"
+                    : "bg-muted-foreground/30 hover:bg-muted-foreground/60 hover:shadow-md hover:shadow-white/10"
+                  }`}
+                aria-label={`Navigate to ${t(`nav.${section}`)}`}
+              />
+              
+              {/* Tooltip */}
+              <div className="absolute left-6 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none z-10">
+                <div className="bg-background/90 backdrop-blur-sm border border-border/50 rounded-lg px-3 py-2 shadow-lg">
+                  <span className="text-xs text-foreground font-medium whitespace-nowrap">
+                    {t(`nav.${section}`)}
+                  </span>
+                  {/* Seta do tooltip */}
+                  <div className="absolute left-0 top-1/2 -translate-x-1 -translate-y-1/2 w-2 h-2 bg-background/90 border-l border-b border-border/50 transform rotate-45"></div>
+                </div>
+              </div>
+            </div>
           ))}
         </div>
       </nav>
@@ -791,9 +800,66 @@ export default function Home() {
         </motion.section>
 
         <motion.section
-          id="connect"
+          id="calendar"
           ref={(el) => {
             sectionsRef.current[5] = el as HTMLElement | null;
+          }}
+          className="py-32"
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+        >
+          <div className="space-y-16">
+            <motion.div 
+              className="text-center space-y-4"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+            >
+              <motion.h2 
+                className="text-4xl font-light"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8, delay: 0.4 }}
+              >
+                {t('calendar.title')}
+              </motion.h2>
+              <motion.p 
+                className="text-xl text-muted-foreground max-w-2xl mx-auto"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8, delay: 0.6 }}
+              >
+                {t('calendar.description')}
+              </motion.p>
+            </motion.div>
+
+            <motion.div 
+              className="max-w-4xl mx-auto"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, delay: 0.8 }}
+            >
+              <div className="bg-gradient-to-br from-background via-background/80 to-muted/20 backdrop-blur-sm border border-border/50 rounded-2xl p-8 shadow-2xl overflow-hidden">
+                <div 
+                  className="calendly-inline-widget" 
+                  data-url="https://calendly.com/felipe-kreulich/30min" 
+                  style={{ minWidth: '320px', height: '500px' }}
+                />
+              </div>
+            </motion.div>
+          </div>
+        </motion.section>
+
+        <motion.section
+          id="connect"
+          ref={(el) => {
+            sectionsRef.current[6] = el as HTMLElement | null;
           }}
           className="py-32 opacity-0"
         >

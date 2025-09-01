@@ -104,6 +104,10 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
         'thoughts.read_more': 'Read more',
         'thoughts.feature_coming_soon': 'This feature is still being added. Coming soon!',
         
+        // Calendar Section
+        'calendar.title': 'Schedule a Meeting',
+        'calendar.description': "Let's talk about your project and how I can help!",
+        
         // Connect Section
         'connect.title': "Let's Connect",
         'connect.description': 'Always interested in new opportunities, collaborations, and conversations about technology and design.',
@@ -127,12 +131,13 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
         'footer.blog': 'Visit my blog',
         
         // Navigation
-        'nav.intro': 'intro',
-        'nav.work': 'work',
-        'nav.projects': 'projects',
-        'nav.thoughts': 'thoughts',
-        'nav.connect': 'connect',
-        'nav.about': 'about',
+        'nav.intro': 'Intro',
+        'nav.work': 'Work',
+        'nav.projects': 'Projects',
+        'nav.thoughts': 'Thoughts',
+        'nav.calendar': 'Calendar',
+        'nav.connect': 'Connect',
+        'nav.about': 'About',
         
         // Not Found Page
         'not_found.title': 'Page Not Found',
@@ -208,6 +213,10 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
         'thoughts.read_more': 'Ler mais',
         'thoughts.feature_coming_soon': 'Esta funcionalidade ainda está sendo adicionada. Em breve!',
         
+        // Calendar Section
+        'calendar.title': 'Agende uma Reunião',
+        'calendar.description': 'Vamos conversar sobre seu projeto e como posso ajudar!',
+        
         // Connect Section
         'connect.title': 'Vamos Conectar',
         'connect.description': 'Sempre interessado em novas oportunidades, colaborações e conversas sobre tecnologia e design.',
@@ -231,12 +240,13 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
         'footer.blog': 'Visite meu blog',
         
         // Navigation
-        'nav.intro': 'introdução',
-        'nav.work': 'trabalho',
-        'nav.projects': 'projetos',
-        'nav.thoughts': 'pensamentos',
-        'nav.connect': 'conectar',
-        'nav.about': 'sobre',
+        'nav.intro': 'Introdução',
+        'nav.work': 'Trabalho',
+        'nav.projects': 'Projetos',
+        'nav.thoughts': 'Pensamentos',
+        'nav.calendar': 'Agenda',
+        'nav.connect': 'Conectar',
+        'nav.about': 'Sobre',
         
         // Not Found Page
         'not_found.title': 'Página não encontrada',
