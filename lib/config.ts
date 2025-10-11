@@ -7,8 +7,8 @@ export const config = {
   // Blog URLs
   blog: {
     url: process.env.NODE_ENV === 'production' 
-      ? process.env.NEXT_PUBLIC_BLOG_URL_PROD || ''
-      : process.env.NEXT_PUBLIC_BLOG_URL_DEV || 'http://192.168.1.138:3000/blog'
+      ? process.env.NEXT_PUBLIC_BLOG_URL_PROD || 'https://kreulich-blog.vercel.app'
+      : process.env.NEXT_PUBLIC_BLOG_URL_DEV || 'http://192.168.56.1:3000/'
   },
   
   // Environment
@@ -19,8 +19,8 @@ export const config = {
   // App URLs
   app: {
     baseUrl: process.env.NODE_ENV === 'production'
-      ? process.env.NEXT_PUBLIC_APP_URL || ''
-      : process.env.NEXT_PUBLIC_APP_URL_DEV || 'http://192.168.1.138:3000'
+      ? process.env.NEXT_PUBLIC_APP_URL || 'http://felipe-kreulich.vercel.app'
+      : process.env.NEXT_PUBLIC_APP_URL_DEV || 'http://192.168.56.1:3000'
   }
 } as const;
 
