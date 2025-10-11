@@ -73,6 +73,9 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
         'work.pop.role': 'Full Stack Developer',
         'work.pop.company': 'POP Tecnologia e Mobilidade',
         'work.pop.description': 'I cannot say much about the project, but it was a very rewarding experience.',
+        'work.az.role': 'Fullstack Developer and Support Analyst',
+        'work.az.company': 'AZ Tecnologia e Gestao',
+        'work.az.description': 'At AZ I worked as a fullstack analyst and developer, developing internal tools for use in support',
         
         // Projects Section
         'projects.title': 'Featured Projects',
@@ -182,6 +185,9 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
         'work.pop.role': 'Desenvolvedor Full Stack',
         'work.pop.company': 'POP Tecnologia e Mobilidade',
         'work.pop.description': 'Atuei como Desenvolvedor Full Stack. Não posso dizer muito sobre o projeto, mas foi uma experiência muito gratificante.',
+        'work.az.role': 'Analista de Suporte e Desenvolvedor Fullstack',
+        'work.az.company': 'AZ Tecnologia e Gestao',
+        'work.az.description': 'Na AZ atuei como analista e desenvolvedor fullstack, no desenvolvimento de ferramentas internas para uso no suporte.',
         
         // Projects Section
         'projects.title': 'Projetos em Destaque',

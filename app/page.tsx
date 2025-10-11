@@ -540,6 +540,13 @@ export default function Home() {
                   tech: ["PHP", "Laravel", "MySQL", "React", "TypeScript", "Next.js"],
                 },
                 {
+                  year: "2024",
+                  role: t('work.az.role'),
+                  company: t('work.az.company'),
+                  description: t('work.az.description'),
+                  tech: ["NextJS", "MySQL", "React", "Typescript"],
+                },
+                {
                   year: "2023",
                   role: t('work.cstc.role'),
                   company: t('work.cstc.company'),
