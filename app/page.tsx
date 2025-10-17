@@ -13,8 +13,8 @@ export default function Home() {
   const [activeSection, setActiveSection] = useState("")
   const sectionsRef = useRef<(HTMLElement | null)[]>([])
   const { language, setLanguage, t } = useLanguage()
-  
-  const sections = ["intro", "about", "work", "projects", "thoughts", "calendar", "connect"]
+
+  const sections = ["intro", "about", "work", "projects", "services", "thoughts", "calendar", "connect"]
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -78,12 +78,12 @@ export default function Home() {
               <button
                 onClick={() => document.getElementById(section)?.scrollIntoView({ behavior: "smooth" })}
                 className={`relative w-2 h-8 rounded-full transition-all duration-700 ${activeSection === section
-                    ? "bg-foreground shadow-lg shadow-white/20"
-                    : "bg-muted-foreground/30 hover:bg-muted-foreground/60 hover:shadow-md hover:shadow-white/10"
+                  ? "bg-foreground shadow-lg shadow-white/20"
+                  : "bg-muted-foreground/30 hover:bg-muted-foreground/60 hover:shadow-md hover:shadow-white/10"
                   }`}
                 aria-label={`Navigate to ${t(`nav.${section}`)}`}
               />
-              
+
               {/* Tooltip */}
               <div className="absolute left-6 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none z-10">
                 <div className="bg-background/90 backdrop-blur-sm border border-border/50 rounded-lg px-3 py-2 shadow-lg">
@@ -233,8 +233,8 @@ export default function Home() {
                     <span
                       key={skill}
                       className={`px-3 py-1 text-xs border rounded-full transition-all duration-300 ${skill === "CyberSecurity"
-                          ? "relative overflow-hidden bg-gradient-to-r from-amber-500/20 to-yellow-500/20 border-amber-500/50 hover:border-amber-400 hover:from-amber-500/30 hover:to-yellow-500/30 hover:shadow-lg hover:shadow-amber-500/25 group"
-                          : "border border-border hover:border-muted-foreground/50"
+                        ? "relative overflow-hidden bg-gradient-to-r from-amber-500/20 to-yellow-500/20 border-amber-500/50 hover:border-amber-400 hover:from-amber-500/30 hover:to-yellow-500/30 hover:shadow-lg hover:shadow-amber-500/25 group"
+                        : "border border-border hover:border-muted-foreground/50"
                         }`}
                     >
                       {skill === "CyberSecurity" && (
@@ -726,7 +726,142 @@ export default function Home() {
             </div>
           </div>
         </motion.section>
+        <motion.section
+          id="services"
+          ref={(el) => {
+            sectionsRef.current[7] = el as HTMLElement | null;
+          }}
+          className="py-32"
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+        >
+          <div className="space-y-16">
+            <motion.div
+              className="text-center space-y-4"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+            >
+              <motion.h2
+                className="text-4xl font-light"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8, delay: 0.4 }}
+              >
+                {t('services.title')}
+              </motion.h2>
+              <motion.p
+                className="text-xl text-muted-foreground max-w-2xl mx-auto"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8, delay: 0.6 }}
+              >
+                {t('services.description')}
+              </motion.p>
+            </motion.div>
 
+            <div className="grid lg:grid-cols-2 gap-8">
+              {[
+                {
+                  icon: "💻",
+                  title: t('services.development.title'),
+                  description: t('services.development.description'),
+                  features: t('services.development.features').split(', ')
+                },
+                {
+                  icon: "🎨",
+                  title: t('services.design.title'),
+                  description: t('services.design.description'),
+                  features: t('services.design.features').split(', ')
+                },
+                {
+                  icon: "🔧",
+                  title: t('services.maintenance.title'),
+                  description: t('services.maintenance.description'),
+                  features: t('services.maintenance.features').split(', ')
+                },
+                {
+                  icon: "📱",
+                  title: t('services.consulting.title'),
+                  description: t('services.consulting.description'),
+                  features: t('services.consulting.features').split(', ')
+                }
+              ].map((service, index) => (
+                <motion.div
+                  key={index}
+                  className="group relative bg-gradient-to-br from-background via-background/80 to-muted/20 backdrop-blur-sm border border-border/50 rounded-xl p-6 hover:border-muted-foreground/50 transition-all duration-500 hover:shadow-xl hover:-translate-y-1"
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.8, delay: index * 0.1 }}
+                  whileHover={{ scale: 1.02 }}
+                >
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-3">
+                      <span className="text-2xl">{service.icon}</span>
+                      <h3 className="text-xl font-medium">{service.title}</h3>
+                    </div>
+
+                    <p className="text-muted-foreground leading-relaxed">
+                      {service.description}
+                    </p>
+
+                    <ul className="space-y-2">
+                      {service.features.map((feature, featureIndex) => (
+                        <li key={featureIndex} className="flex items-center gap-2 text-sm text-muted-foreground">
+                          <svg className="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                          </svg>
+                          {feature}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+
+            <motion.div
+              className="text-center space-y-8"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, delay: 0.8 }}
+            >
+              <div className="max-w-2xl mx-auto space-y-4">
+                <h3 className="text-2xl font-light">{t('services.contact.title')}</h3>
+                <p className="text-muted-foreground">{t('services.contact.description')}</p>
+              </div>
+
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Link
+                  href={`mailto:${t('connect.email')}?subject=${encodeURIComponent(t('services.contact.quote_subject'))}`}
+                  className="group inline-flex items-center gap-2 px-6 py-3 bg-foreground text-background rounded-lg hover:bg-foreground/90 transition-all duration-300"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  </svg>
+                  {t('services.contact.quote_button')}
+                </Link>
+
+                <Link
+                  href={`mailto:${t('connect.email')}?subject=${encodeURIComponent(t('services.contact.question_subject'))}`}
+                  className="group inline-flex items-center gap-2 px-6 py-3 border border-border hover:border-muted-foreground/50 rounded-lg transition-all duration-300"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  {t('services.contact.question_button')}
+                </Link>
+              </div>
+            </motion.div>
+          </div>
+        </motion.section>
         <motion.section
           id="thoughts"
           ref={(el) => {
@@ -818,14 +953,14 @@ export default function Home() {
           transition={{ duration: 0.8, ease: "easeOut" }}
         >
           <div className="space-y-16">
-            <motion.div 
+            <motion.div
               className="text-center space-y-4"
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8, delay: 0.2 }}
             >
-              <motion.h2 
+              <motion.h2
                 className="text-4xl font-light"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -834,7 +969,7 @@ export default function Home() {
               >
                 {t('calendar.title')}
               </motion.h2>
-              <motion.p 
+              <motion.p
                 className="text-xl text-muted-foreground max-w-2xl mx-auto"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -845,7 +980,7 @@ export default function Home() {
               </motion.p>
             </motion.div>
 
-            <motion.div 
+            <motion.div
               className="max-w-4xl mx-auto"
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -853,9 +988,9 @@ export default function Home() {
               transition={{ duration: 0.8, delay: 0.8 }}
             >
               <div className="bg-gradient-to-br from-background via-background/80 to-muted/20 backdrop-blur-sm border border-border/50 rounded-2xl p-8 shadow-2xl overflow-hidden">
-                <div 
-                  className="calendly-inline-widget" 
-                  data-url="https://calendly.com/felipe-kreulich/30min" 
+                <div
+                  className="calendly-inline-widget"
+                  data-url="https://calendly.com/felipe-kreulich/30min"
                   style={{ minWidth: '320px', height: '500px' }}
                 />
               </div>
