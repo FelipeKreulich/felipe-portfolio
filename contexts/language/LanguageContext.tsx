@@ -108,7 +108,7 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
         'services.maintenance.features': 'Bug Fixes, Performance Optimization, Security Updates, Feature Updates, Technical Support',
         'services.consulting.title': 'Technical Consulting',
         'services.consulting.description': 'Strategic guidance on technology decisions and project architecture.',
-        'services.consulting.features': 'Technology Strategy, Code Review, Architecture Planning, Performance Audit, Team Training',
+        'services.consulting.features': 'Code Review, Architecture Planning',
         'services.contact.title': 'Ready to Start Your Project?',
         'services.contact.description': 'Whether you need a quote or just want to discuss your ideas, I\'m here to help.',
         'services.contact.quote_button': 'Request Quote',
@@ -117,7 +117,22 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
         'services.contact.question_subject': 'General Question',
         'nav.services': 'Services',
         
-        // Thoughts Section
+        // Blog Section
+        'blog.badge': 'Now Available',
+        'blog.title': 'Explore My Blog',
+        'blog.description': 'Dive into articles about technology, development, and insights from my journey as a developer.',
+        'blog.cta': 'Visit Blog',
+        'blog.subtitle': 'New articles every week',
+        'blog.topic1.title': 'Web Development',
+        'blog.topic1.description': 'Modern techniques, frameworks, and best practices for building amazing web applications.',
+        'blog.topic2.title': 'Career & Growth',
+        'blog.topic2.description': 'Tips, experiences, and lessons learned throughout my journey as a developer.',
+        'blog.topic3.title': 'Technology & AI',
+        'blog.topic3.description': 'Exploring the latest in technology, artificial intelligence, and their impact on development.',
+        'blog.footer_text': 'Join me on this journey of continuous learning and discovery.',
+        'blog.footer_cta': 'Read all articles',
+
+        // Thoughts Section (kept for backwards compatibility)
         'thoughts.title': 'Recent Thoughts',
         'thoughts.future.title': 'The Future of Web Development',
         'thoughts.future.excerpt': 'Exploring how AI and automation are reshaping the way we build for the web.',
@@ -133,7 +148,18 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
         // Calendar Section
         'calendar.title': 'Schedule a Meeting',
         'calendar.description': "Let's talk about your project and how I can help!",
-        
+
+        // Buy Me a Coffee Section
+        'coffee.title': 'Support My Work',
+        'coffee.subtitle': 'Enjoying my content?',
+        'coffee.description': 'If you find my work valuable and want to support what I do, consider buying me a coffee! Your support helps me continue creating content, open-source projects, and sharing knowledge with the community.',
+        'coffee.cta': 'Buy Me a Coffee',
+        'coffee.badge': 'Every coffee counts!',
+        'coffee.feature1': 'Support open-source',
+        'coffee.feature2': 'Fund new projects',
+        'coffee.feature3': 'Community driven',
+        'coffee.thanks': 'Thank you for your support!',
+
         // Connect Section
         'connect.title': "Let's Connect",
         'connect.description': 'Always interested in new opportunities, collaborations, and conversations about technology and design.',
@@ -160,7 +186,7 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
         'nav.intro': 'Intro',
         'nav.work': 'Work',
         'nav.projects': 'Projects',
-        'nav.thoughts': 'Thoughts',
+        'nav.thoughts': 'Blog',
         'nav.calendar': 'Calendar',
         'nav.connect': 'Connect',
         'nav.about': 'About',
@@ -243,7 +269,7 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
         'services.maintenance.features': 'Correção de Bugs, Otimização de Performance, Atualizações de Segurança, Atualizações de Funcionalidades, Suporte Técnico',
         'services.consulting.title': 'Consultoria Técnica',
         'services.consulting.description': 'Orientação estratégica sobre decisões tecnológicas e arquitetura de projetos.',
-        'services.consulting.features': 'Estratégia Tecnológica, Revisão de Código, Planeamento de Arquitetura, Auditoria de Performance, Formação de Equipas',
+        'services.consulting.features': 'Revisão de Código, Planeamento de Arquitetura',
         'services.contact.title': 'Pronto para Começar o Seu Projeto?',
         'services.contact.description': 'Seja para solicitar um orçamento ou apenas discutir as suas ideias, estou aqui para ajudar.',
         'services.contact.quote_button': 'Solicitar Orçamento',
@@ -252,7 +278,22 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
         'services.contact.question_subject': 'Pergunta Geral',
         'nav.services': 'Serviços',
         
-        // Thoughts Section
+        // Blog Section
+        'blog.badge': 'Disponível Agora',
+        'blog.title': 'Explore o Meu Blog',
+        'blog.description': 'Mergulhe em artigos sobre tecnologia, desenvolvimento e insights da minha jornada como programador.',
+        'blog.cta': 'Visitar Blog',
+        'blog.subtitle': 'Novos artigos toda semana',
+        'blog.topic1.title': 'Desenvolvimento Web',
+        'blog.topic1.description': 'Técnicas modernas, frameworks e melhores práticas para construir aplicações web incríveis.',
+        'blog.topic2.title': 'Carreira e Crescimento',
+        'blog.topic2.description': 'Dicas, experiências e lições aprendidas ao longo da minha jornada como programador.',
+        'blog.topic3.title': 'Tecnologia e IA',
+        'blog.topic3.description': 'Explorando o mais recente em tecnologia, inteligência artificial e seu impacto no desenvolvimento.',
+        'blog.footer_text': 'Junte-se a mim nesta jornada de aprendizado contínuo e descoberta.',
+        'blog.footer_cta': 'Ler todos os artigos',
+
+        // Thoughts Section (kept for backwards compatibility)
         'thoughts.title': 'Pensamentos Recentes',
         'thoughts.future.title': 'O Futuro do Desenvolvimento Web',
         'thoughts.future.excerpt': 'Explorando como a IA e automação estão a reformular a forma como construímos para a web.',
@@ -268,7 +309,18 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
         // Calendar Section
         'calendar.title': 'Agende uma Reunião',
         'calendar.description': 'Vamos conversar sobre seu projeto e como posso ajudar!',
-        
+
+        // Buy Me a Coffee Section
+        'coffee.title': 'Apoie o Meu Trabalho',
+        'coffee.subtitle': 'Gostando do meu conteúdo?',
+        'coffee.description': 'Se acha o meu trabalho valioso e quer apoiar o que faço, considere comprar-me um café! O seu apoio ajuda-me a continuar a criar conteúdo, projetos open-source e a partilhar conhecimento com a comunidade.',
+        'coffee.cta': 'Comprar um Café',
+        'coffee.badge': 'Cada café conta!',
+        'coffee.feature1': 'Apoiar open-source',
+        'coffee.feature2': 'Financiar novos projetos',
+        'coffee.feature3': 'Impulsionado pela comunidade',
+        'coffee.thanks': 'Obrigado pelo seu apoio!',
+
         // Connect Section
         'connect.title': 'Vamos Conectar',
         'connect.description': 'Sempre interessado em novas oportunidades, colaborações e conversas sobre tecnologia e design.',
@@ -295,7 +347,7 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
         'nav.intro': 'Introdução',
         'nav.work': 'Trabalho',
         'nav.projects': 'Projetos',
-        'nav.thoughts': 'Pensamentos',
+        'nav.thoughts': 'Blog',
         'nav.calendar': 'Agenda',
         'nav.connect': 'Conectar',
         'nav.about': 'Sobre',

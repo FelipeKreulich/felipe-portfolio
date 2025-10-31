@@ -7,6 +7,9 @@ import { useLanguage } from "../contexts/language/LanguageContext"
 import { toast } from "sonner"
 import { config } from "@/lib/config"
 import { useTheme } from "../hooks/use-theme"
+import dynamic from "next/dynamic"
+
+const ShapeBlur = dynamic(() => import("@/components/ui/ShapeBlur"), { ssr: false })
 
 export default function Home() {
   const { isDark, toggleTheme, isLoaded } = useTheme()
@@ -14,7 +17,7 @@ export default function Home() {
   const sectionsRef = useRef<(HTMLElement | null)[]>([])
   const { language, setLanguage, t } = useLanguage()
 
-  const sections = ["intro", "about", "work", "projects", "services", "thoughts", "calendar", "connect"]
+  const sections = ["intro", "about", "work", "projects", "services", "thoughts", "calendar", "coffee", "connect"]
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -151,9 +154,10 @@ export default function Home() {
                   transition={{ duration: 0.8, delay: 1, ease: "easeOut" }}
                 >
                   {t('intro.description')}
-                  <span className="text-foreground"> {t('intro.design')}</span>,<span className="text-foreground"> {t('intro.technology')}</span>,
+                  <span className="text-foreground font-medium"> {t('intro.design')}</span>,
+                  <span className="text-foreground font-medium"> {t('intro.technology')}</span>,
                   {t('intro.and')}
-                  <span className="text-foreground"> {t('intro.human_behavior')}</span>.
+                  <span className="text-foreground font-medium"> {t('intro.human_behavior')}</span>.
                 </motion.p>
 
                 <motion.div
@@ -186,17 +190,34 @@ export default function Home() {
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.6, delay: 1.6 }}
+                    className="relative"
                   >
+                    {/* ShapeBlur Effect - Container com tamanho fixo */}
+                    <div className="absolute -inset-4 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500" style={{ width: '180px', height: '60px' }}>
+                      <ShapeBlur
+                        variation={0}
+                        pixelRatioProp={typeof window !== 'undefined' ? window.devicePixelRatio || 1 : 1}
+                        shapeSize={0.8}
+                        roundness={0.6}
+                        borderSize={0.08}
+                        circleSize={0.4}
+                        circleEdge={1.0}
+                      />
+                    </div>
+
                     <motion.button
                       onClick={handleDownloadCV}
-                      className="group p-2 rounded-lg border border-border hover:border-muted-foreground/50 transition-all duration-300 hover:bg-muted/50"
+                      className="group relative z-10 px-4 py-2 rounded-lg bg-gradient-to-r from-purple-600/90 to-blue-600/90 hover:from-purple-500 hover:to-blue-500 border border-purple-500/50 hover:border-purple-400 transition-all duration-300 shadow-lg hover:shadow-2xl hover:shadow-purple-500/50"
                       title={language === 'pt' ? 'Baixar currículo em português' : 'Download CV in English'}
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                     >
-                      <span className="text-xs text-muted-foreground group-hover:text-foreground transition-colors duration-300 flex items-center gap-2">
+                      {/* Brilho animado */}
+                      <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg"></div>
+
+                      <span className="relative text-xs text-white font-medium transition-colors duration-300 flex items-center gap-2">
                         <svg
-                          className="w-3 h-3"
+                          className="w-4 h-4"
                           fill="none"
                           stroke="currentColor"
                           viewBox="0 0 24 24"
@@ -286,7 +307,7 @@ export default function Home() {
               <div className="relative group">
                 {/* Card Metálico */}
                 <div
-                  className="relative bg-gradient-to-br from-zinc-800 via-zinc-700 to-zinc-900 backdrop-blur-sm border border-zinc-600/50 rounded-2xl p-8 shadow-2xl overflow-hidden group/card"
+                  className="relative bg-gradient-to-br from-background via-muted/30 to-background backdrop-blur-sm border border-border rounded-2xl p-8 shadow-2xl overflow-hidden group/card dark:from-zinc-800 dark:via-zinc-700 dark:to-zinc-900 dark:border-zinc-600/50"
                   onMouseMove={(e) => {
                     const rect = e.currentTarget.getBoundingClientRect()
                     const x = ((e.clientX - rect.left) / rect.width) * 100
@@ -303,103 +324,68 @@ export default function Home() {
                     '--mouse-y': '50%'
                   } as React.CSSProperties}
                 >
-
-
-                  {/* Base metálica com textura */}
-                  <div className="absolute inset-0 opacity-0 group-hover/card:opacity-100 transition-opacity duration-300">
+                  {/* Gradiente holográfico principal - Apenas no dark mode */}
+                  <div className="absolute inset-0 opacity-0 dark:opacity-90 mix-blend-multiply dark:mix-blend-multiply">
                     <div
-                      className="absolute inset-0 rounded-2xl"
+                      className="absolute inset-0 rounded-2xl transition-all duration-75"
                       style={{
-                        background: `linear-gradient(135deg, 
-                          rgba(192, 192, 192, 0.1) 0%, 
-                          rgba(255, 255, 255, 0.2) 25%, 
-                          rgba(192, 192, 192, 0.1) 50%, 
-                          rgba(128, 128, 128, 0.1) 75%, 
-                          rgba(192, 192, 192, 0.1) 100%)`
-                      }}
-                    />
-                  </div>
-
-                  {/* Efeito holográfico colorido */}
-                  <div className="absolute inset-0 opacity-0 group-hover/card:opacity-100 transition-opacity duration-400 mix-blend-screen">
-                    <div
-                      className="absolute inset-0 rounded-2xl"
-                      style={{
-                        background: `radial-gradient(ellipse at var(--mouse-x) var(--mouse-y), 
-                          rgba(220, 160, 225, 0.2) 0%, 
-                          rgba(30, 210, 220, 0.15) 30%, 
-                          rgba(60, 230, 65, 0.15) 60%, 
+                        background: `radial-gradient(circle at var(--mouse-x) var(--mouse-y),
+                          rgba(220, 160, 225, 0.7) 0%,
+                          rgba(30, 210, 220, 0.6) 30%,
+                          rgba(60, 230, 65, 0.6) 60%,
                           transparent 80%)`
                       }}
                     />
                   </div>
 
-
-
-                  {/* Reflexão metálica principal */}
-                  <div className="absolute inset-0 opacity-0 group-hover/card:opacity-100 transition-opacity duration-400 mix-blend-overlay">
+                  {/* Segunda camada de gradiente - apenas dark mode */}
+                  <div className="absolute inset-0 opacity-0 dark:opacity-90 mix-blend-multiply">
                     <div
-                      className="absolute inset-0 rounded-2xl"
+                      className="absolute inset-0 rounded-2xl transition-all duration-75"
                       style={{
-                        background: `radial-gradient(ellipse at var(--mouse-x) var(--mouse-y), 
-                          rgba(255, 255, 255, 0.4) 0%, 
-                          rgba(255, 255, 255, 0.1) 40%, 
+                        background: `radial-gradient(circle at calc(100% - var(--mouse-x)) calc(100% - var(--mouse-y)),
+                          rgba(30, 210, 220, 0.6) 0%,
+                          rgba(140, 145, 255, 0.5) 40%,
                           transparent 70%)`
                       }}
                     />
                   </div>
 
-                  {/* Reflexão secundária (inversa) */}
-                  <div className="absolute inset-0 opacity-0 group-hover/card:opacity-100 transition-opacity duration-500 mix-blend-overlay">
+                  {/* Terceira camada - verde - apenas dark mode */}
+                  <div className="absolute inset-0 opacity-0 dark:opacity-90 mix-blend-multiply">
                     <div
-                      className="absolute inset-0 rounded-2xl"
+                      className="absolute inset-0 rounded-2xl transition-all duration-75"
                       style={{
-                        background: `radial-gradient(ellipse at calc(100% - var(--mouse-x)) calc(100% - var(--mouse-y)), 
-                          rgba(0, 0, 0, 0.2) 0%, 
-                          rgba(0, 0, 0, 0.05) 40%, 
+                        background: `radial-gradient(circle at var(--mouse-x) calc(100% - var(--mouse-y)),
+                          rgba(60, 230, 65, 0.6) 0%,
+                          rgba(220, 160, 225, 0.5) 30%,
+                          transparent 60%)`
+                      }}
+                    />
+                  </div>
+
+                  {/* Efeito sutil para light mode */}
+                  <div className="absolute inset-0 opacity-0 group-hover/card:opacity-20 dark:opacity-0 transition-opacity duration-300">
+                    <div
+                      className="absolute inset-0 rounded-2xl transition-all duration-75"
+                      style={{
+                        background: `radial-gradient(circle at var(--mouse-x) var(--mouse-y),
+                          rgba(139, 92, 246, 0.3) 0%,
+                          rgba(59, 130, 246, 0.2) 40%,
                           transparent 70%)`
                       }}
                     />
                   </div>
 
-                  {/* Brilho metálico dinâmico */}
-                  <div className="absolute inset-0 opacity-0 group-hover/card:opacity-100 transition-opacity duration-300 mix-blend-soft-light">
+                  {/* Shimmer effect - ajustado para ambos os modos */}
+                  <div className="absolute inset-0 opacity-0 group-hover/card:opacity-20 dark:group-hover/card:opacity-25 mix-blend-overlay transition-opacity duration-300">
                     <div
-                      className="absolute inset-0 rounded-2xl"
+                      className="absolute inset-0 rounded-2xl transition-all duration-75"
                       style={{
-                        background: `linear-gradient(calc(var(--mouse-x) * 3.6deg), 
-                          transparent 0%, 
-                          rgba(255, 255, 255, 0.3) 50%, 
-                          transparent 100%)`
-                      }}
-                    />
-                  </div>
-
-                  {/* Gradiente holográfico linear */}
-                  <div className="absolute inset-0 opacity-0 group-hover/card:opacity-100 transition-opacity duration-500 mix-blend-screen">
-                    <div
-                      className="absolute inset-0 rounded-2xl"
-                      style={{
-                        background: `linear-gradient(calc(var(--mouse-x) * 3.6deg), 
-                          rgba(220, 160, 225, 0.1), 
-                          rgba(30, 210, 220, 0.1), 
-                          rgba(140, 145, 255, 0.1))`
-                      }}
-                    />
-                  </div>
-
-                  {/* Textura metálica sutil */}
-                  <div className="absolute inset-0 opacity-0 group-hover/card:opacity-100 transition-opacity duration-600 mix-blend-multiply">
-                    <div
-                      className="absolute inset-0 rounded-2xl"
-                      style={{
-                        background: `repeating-linear-gradient(
-                          45deg,
-                          transparent,
-                          transparent 2px,
-                          rgba(255, 255, 255, 0.02) 2px,
-                          rgba(255, 255, 255, 0.02) 4px
-                        )`
+                        background: `linear-gradient(calc(var(--mouse-x) * 2deg),
+                          transparent 30%,
+                          rgba(255, 255, 255, 0.6) 50%,
+                          transparent 70%)`
                       }}
                     />
                   </div>
@@ -410,21 +396,26 @@ export default function Home() {
                     {/* Foto */}
                     <div className="relative">
                       <div className="relative w-64 h-64 mx-auto lg:mx-0">
-                        {/* Efeito holográfico na foto */}
-                        <div className="absolute inset-0 bg-gradient-to-br from-purple-500/30 via-cyan-500/20 to-green-500/30 rounded-full blur-xl group-hover:blur-2xl transition-all duration-500 mix-blend-screen"></div>
-                        <div className="absolute inset-0 bg-gradient-to-tl from-cyan-500/25 via-transparent to-purple-500/25 rounded-full blur-lg group-hover:blur-xl transition-all duration-500 mix-blend-overlay"></div>
+                        {/* Efeitos holográficos - mais sutis no light mode */}
+                        <div className="absolute inset-0 bg-gradient-to-br from-purple-500/20 via-cyan-500/15 to-green-500/20 dark:from-purple-500/40 dark:via-cyan-500/30 dark:to-green-500/40 rounded-full blur-2xl transition-all duration-300 mix-blend-screen"></div>
+                        <div className="absolute inset-0 bg-gradient-to-tl from-cyan-500/15 via-transparent to-purple-500/15 dark:from-cyan-500/35 dark:via-transparent dark:to-purple-500/35 rounded-full blur-xl transition-all duration-300 mix-blend-overlay"></div>
+                        <div className="absolute inset-0 opacity-0 dark:opacity-100 bg-gradient-to-r from-green-500/30 via-blue-500/30 to-pink-500/30 rounded-full blur-lg animate-pulse mix-blend-screen"></div>
 
                         <img
                           src="/eu.png"
                           alt="Felipe Kreulich"
-                          className="relative w-full h-full object-cover rounded-full border-4 border-border/50 group-hover:border-muted-foreground/50 transition-all duration-500 shadow-2xl"
+                          className="relative w-full h-full object-cover rounded-full border-4 border-border hover:border-purple-500/50 dark:border-purple-500/30 dark:hover:border-cyan-500/50 transition-all duration-500 shadow-2xl dark:shadow-purple-500/20"
                         />
 
-                        {/* Efeito de brilho holográfico na foto */}
-                        <div className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 mix-blend-overlay">
-                          <div className="absolute inset-0 bg-gradient-to-br from-transparent via-white/30 to-transparent rounded-full"></div>
-                          <div className="absolute inset-0 bg-gradient-to-tl from-transparent via-cyan-500/20 to-transparent rounded-full"></div>
+                        {/* Brilho dinâmico adicional - ajustado para ambos os modos */}
+                        <div className="absolute inset-0 rounded-full opacity-30 dark:opacity-70 mix-blend-overlay">
+                          <div className="absolute inset-0 bg-gradient-to-br from-transparent via-white/40 to-transparent rounded-full"></div>
+                          <div className="absolute inset-0 bg-gradient-to-tl from-transparent via-cyan-500/30 to-transparent rounded-full"></div>
                         </div>
+
+                        {/* Ring pulsante ao redor - mais sutil no light mode */}
+                        <div className="absolute inset-0 rounded-full border-2 border-purple-500/10 dark:border-purple-500/20 animate-pulse"></div>
+                        <div className="absolute inset-[-4px] rounded-full border border-purple-500/5 dark:border-cyan-500/10"></div>
                       </div>
                     </div>
 
@@ -538,6 +529,8 @@ export default function Home() {
                   company: t('work.pop.company'),
                   description: t('work.pop.description'),
                   tech: ["PHP", "Laravel", "MySQL", "React", "TypeScript", "Next.js"],
+                  gradient: "from-purple-500 to-pink-500",
+                  borderColor: "border-purple-500/30 hover:border-purple-500/60"
                 },
                 {
                   year: "2024",
@@ -545,6 +538,8 @@ export default function Home() {
                   company: t('work.az.company'),
                   description: t('work.az.description'),
                   tech: ["NextJS", "MySQL", "React", "Typescript"],
+                  gradient: "from-blue-500 to-cyan-500",
+                  borderColor: "border-blue-500/30 hover:border-blue-500/60"
                 },
                 {
                   year: "2023",
@@ -552,6 +547,8 @@ export default function Home() {
                   company: t('work.cstc.company'),
                   description: t('work.cstc.description'),
                   tech: ["PHP", "Laravel", "MySQL"],
+                  gradient: "from-green-500 to-emerald-500",
+                  borderColor: "border-green-500/30 hover:border-green-500/60"
                 },
                 {
                   year: "2021",
@@ -559,19 +556,24 @@ export default function Home() {
                   company: t('work.army.company'),
                   description: t('work.army.description'),
                   tech: ["React", "TypeScript", "Next.js"],
+                  gradient: "from-orange-500 to-amber-500",
+                  borderColor: "border-orange-500/30 hover:border-orange-500/60"
                 },
               ].map((job, index) => (
                 <motion.div
                   key={index}
-                  className="group grid lg:grid-cols-12 gap-8 py-8 border-b border-border/50 hover:border-border transition-colors duration-500"
+                  className={`group relative grid lg:grid-cols-12 gap-8 py-8 border-b ${job.borderColor} transition-all duration-500 rounded-lg px-4 hover:shadow-lg`}
                   initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.8, delay: index * 0.2 }}
                   whileHover={{ scale: 1.02 }}
                 >
-                  <div className="lg:col-span-2">
-                    <div className="text-2xl font-light text-muted-foreground group-hover:text-foreground transition-colors duration-500">
+                  {/* Gradiente sutil de fundo no hover */}
+                  <div className={`absolute inset-0 bg-gradient-to-r ${job.gradient} opacity-0 group-hover:opacity-5 transition-opacity duration-500 rounded-lg pointer-events-none`}></div>
+
+                  <div className="lg:col-span-2 relative z-10">
+                    <div className={`text-2xl font-bold bg-gradient-to-r ${job.gradient} bg-clip-text text-transparent group-hover:scale-110 transition-transform duration-500`}>
                       {job.year}
                     </div>
                   </div>
@@ -646,34 +648,47 @@ export default function Home() {
                   description: t('projects.portfolio.description'),
                   tech: t('projects.portfolio.tech'),
                   link: t('projects.portfolio.link'),
-                  color: 'from-blue-500/10 to-cyan-500/10 hover:from-blue-500/20 hover:to-cyan-500/20'
+                  color: 'from-blue-500/10 to-cyan-500/10 hover:from-blue-500/20 hover:to-cyan-500/20',
+                  borderColor: 'hover:border-cyan-500/40',
+                  shadowColor: 'hover:shadow-cyan-500/20',
+                  type: 'no-link'
                 },
                 {
                   title: t('projects.wormhole.title'),
                   description: t('projects.wormhole.description'),
                   tech: t('projects.wormhole.tech'),
                   link: t('projects.wormhole.link'),
-                  color: 'from-purple-500/10 to-pink-500/10 hover:from-purple-500/20 hover:to-pink-500/20'
+                  color: 'from-purple-500/10 to-pink-500/10 hover:from-purple-500/20 hover:to-pink-500/20',
+                  borderColor: 'hover:border-purple-500/40',
+                  shadowColor: 'hover:shadow-purple-500/20',
+                  type: 'coming-soon'
                 },
                 {
                   title: t('projects.blog.title'),
                   description: t('projects.blog.description'),
                   tech: t('projects.blog.tech'),
                   link: t('projects.blog.link'),
-                  color: 'from-green-500/10 to-emerald-500/10 hover:from-green-500/20 hover:to-emerald-500/20'
+                  color: 'from-green-500/10 to-emerald-500/10 hover:from-green-500/20 hover:to-emerald-500/20',
+                  borderColor: 'hover:border-green-500/40',
+                  shadowColor: 'hover:shadow-green-500/20',
+                  type: 'external',
+                  url: 'https://kreulich-blog.vercel.app'
                 }
               ].map((project, index) => (
                 <motion.div
                   key={index}
-                  className="group relative bg-gradient-to-br from-background via-background/80 to-muted/20 backdrop-blur-sm border border-border/50 rounded-xl p-6 hover:border-muted-foreground/50 transition-all duration-500 hover:shadow-xl hover:-translate-y-1"
+                  className={`group relative bg-gradient-to-br from-background via-background/80 to-muted/20 backdrop-blur-sm border border-border/50 ${project.borderColor} rounded-xl p-6 transition-all duration-500 hover:shadow-2xl ${project.shadowColor} hover:-translate-y-2`}
                   initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.8, delay: index * 0.2 }}
-                  whileHover={{ scale: 1.02 }}
+                  whileHover={{ scale: 1.03 }}
                 >
-                  {/* Efeito de brilho no hover */}
+                  {/* Efeito de brilho no hover - mais intenso */}
                   <div className={`absolute inset-0 bg-gradient-to-br ${project.color} opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl`}></div>
+
+                  {/* Brilho adicional animado */}
+                  <div className={`absolute inset-0 bg-gradient-to-tr ${project.color} opacity-0 group-hover:opacity-70 transition-all duration-700 rounded-xl blur-xl`}></div>
 
                   <div className="relative z-10 space-y-4">
                     <div className="space-y-2">
@@ -699,27 +714,56 @@ export default function Home() {
                       </div>
                     </div>
 
-                    <div className="pt-2">
-                      <button
-                        onClick={handleReadMore}
-                        className="group inline-flex items-center gap-2 text-sm text-muted-foreground group-hover:text-foreground transition-colors duration-300 cursor-pointer hover:opacity-80"
-                      >
-                        <span>{project.link}</span>
-                        <svg
-                          className="w-4 h-4 transform group-hover:translate-x-1 transition-transform duration-300"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
+                    {/* Renderização condicional do botão */}
+                    {project.type === 'external' && (
+                      <div className="pt-2">
+                        <Link
+                          href={project.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="group/link inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors duration-300"
                         >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M17 8l4 4m0 0l-4 4m4-4H3"
-                          />
-                        </svg>
-                      </button>
-                    </div>
+                          <span>{project.link}</span>
+                          <svg
+                            className="w-4 h-4 transform group-hover/link:translate-x-1 transition-transform duration-300"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M17 8l4 4m0 0l-4 4m4-4H3"
+                            />
+                          </svg>
+                        </Link>
+                      </div>
+                    )}
+
+                    {project.type === 'coming-soon' && (
+                      <div className="pt-2">
+                        <button
+                          onClick={handleReadMore}
+                          className="group/btn inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors duration-300 cursor-pointer"
+                        >
+                          <span>{project.link}</span>
+                          <svg
+                            className="w-4 h-4 transform group-hover/btn:translate-x-1 transition-transform duration-300"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M17 8l4 4m0 0l-4 4m4-4H3"
+                            />
+                          </svg>
+                        </button>
+                      </div>
+                    )}
                   </div>
                 </motion.div>
               ))}
@@ -771,40 +815,61 @@ export default function Home() {
                   icon: "💻",
                   title: t('services.development.title'),
                   description: t('services.development.description'),
-                  features: t('services.development.features').split(', ')
+                  features: t('services.development.features').split(', '),
+                  gradient: "from-blue-500 to-cyan-500",
+                  bgGradient: "from-blue-500/10 to-cyan-500/10",
+                  borderColor: "hover:border-cyan-500/40",
+                  iconBg: "bg-gradient-to-br from-blue-500/20 to-cyan-500/20"
                 },
                 {
                   icon: "🎨",
                   title: t('services.design.title'),
                   description: t('services.design.description'),
-                  features: t('services.design.features').split(', ')
+                  features: t('services.design.features').split(', '),
+                  gradient: "from-purple-500 to-pink-500",
+                  bgGradient: "from-purple-500/10 to-pink-500/10",
+                  borderColor: "hover:border-purple-500/40",
+                  iconBg: "bg-gradient-to-br from-purple-500/20 to-pink-500/20"
                 },
                 {
                   icon: "🔧",
                   title: t('services.maintenance.title'),
                   description: t('services.maintenance.description'),
-                  features: t('services.maintenance.features').split(', ')
+                  features: t('services.maintenance.features').split(', '),
+                  gradient: "from-green-500 to-emerald-500",
+                  bgGradient: "from-green-500/10 to-emerald-500/10",
+                  borderColor: "hover:border-green-500/40",
+                  iconBg: "bg-gradient-to-br from-green-500/20 to-emerald-500/20"
                 },
                 {
                   icon: "📱",
                   title: t('services.consulting.title'),
                   description: t('services.consulting.description'),
-                  features: t('services.consulting.features').split(', ')
+                  features: t('services.consulting.features').split(', '),
+                  gradient: "from-orange-500 to-amber-500",
+                  bgGradient: "from-orange-500/10 to-amber-500/10",
+                  borderColor: "hover:border-orange-500/40",
+                  iconBg: "bg-gradient-to-br from-orange-500/20 to-amber-500/20"
                 }
               ].map((service, index) => (
                 <motion.div
                   key={index}
-                  className="group relative bg-gradient-to-br from-background via-background/80 to-muted/20 backdrop-blur-sm border border-border/50 rounded-xl p-6 hover:border-muted-foreground/50 transition-all duration-500 hover:shadow-xl hover:-translate-y-1"
+                  className={`group relative bg-gradient-to-br from-background via-background/80 to-muted/20 backdrop-blur-sm border border-border/50 ${service.borderColor} rounded-xl p-6 transition-all duration-500 hover:shadow-2xl hover:-translate-y-2`}
                   initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.8, delay: index * 0.1 }}
-                  whileHover={{ scale: 1.02 }}
+                  whileHover={{ scale: 1.03 }}
                 >
-                  <div className="space-y-4">
+                  {/* Efeito de fundo colorido no hover */}
+                  <div className={`absolute inset-0 bg-gradient-to-br ${service.bgGradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl`}></div>
+
+                  <div className="relative z-10 space-y-4">
                     <div className="flex items-center gap-3">
-                      <span className="text-2xl">{service.icon}</span>
-                      <h3 className="text-xl font-medium">{service.title}</h3>
+                      <div className={`text-3xl p-3 rounded-xl ${service.iconBg} group-hover:scale-110 transition-transform duration-300`}>
+                        {service.icon}
+                      </div>
+                      <h3 className={`text-xl font-semibold bg-gradient-to-r ${service.gradient} bg-clip-text text-transparent`}>{service.title}</h3>
                     </div>
 
                     <p className="text-muted-foreground leading-relaxed">
@@ -867,61 +932,81 @@ export default function Home() {
           ref={(el) => {
             sectionsRef.current[4] = el as HTMLElement | null;
           }}
-          className="min-h-screen py-32 opacity-0"
+          className="min-h-screen py-32"
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
         >
           <div className="space-y-16">
-            <h2 className="text-4xl font-light">{t('thoughts.title')}</h2>
+            {/* Hero Section do Blog */}
+            <motion.div
+              className="relative overflow-hidden rounded-3xl"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+            >
+              <div className="relative bg-gradient-to-br from-purple-900/40 via-blue-900/40 to-cyan-900/40 backdrop-blur-sm border border-purple-500/30 rounded-3xl p-12 lg:p-16 overflow-hidden group">
+                {/* Efeitos de fundo animados */}
+                <div className="absolute inset-0 bg-gradient-to-br from-purple-500/20 via-blue-500/20 to-cyan-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+                <div className="absolute inset-0">
+                  <div className="absolute top-0 -left-4 w-72 h-72 bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
+                  <div className="absolute top-0 -right-4 w-72 h-72 bg-cyan-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000"></div>
+                  <div className="absolute -bottom-8 left-20 w-72 h-72 bg-blue-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-4000"></div>
+                </div>
 
-            <div className="grid lg:grid-cols-2 gap-8">
-              {[
-                {
-                  title: t('thoughts.future.title'),
-                  excerpt: t('thoughts.future.excerpt'),
-                  date: "Dec 2024",
-                  readTime: "5 min",
-                },
-                {
-                  title: t('thoughts.design.title'),
-                  excerpt: t('thoughts.design.excerpt'),
-                  date: "Nov 2024",
-                  readTime: "8 min",
-                },
-                {
-                  title: t('thoughts.performance.title'),
-                  excerpt: t('thoughts.performance.excerpt'),
-                  date: "Oct 2024",
-                  readTime: "6 min",
-                },
-                {
-                  title: t('thoughts.code_review.title'),
-                  excerpt: t('thoughts.code_review.excerpt'),
-                  date: "Sep 2024",
-                  readTime: "4 min",
-                },
-              ].map((post, index) => (
-                <article
-                  key={index}
-                  className="group p-8 border border-border rounded-lg hover:border-muted-foreground/50 transition-all duration-500 hover:shadow-lg cursor-pointer"
-                >
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between text-xs text-muted-foreground font-mono">
-                      <span>{post.date}</span>
-                      <span>{post.readTime}</span>
-                    </div>
+                <div className="relative z-10 text-center space-y-8">
+                  <motion.div
+                    className="inline-flex items-center gap-2 px-4 py-2 bg-purple-500/20 border border-purple-500/30 rounded-full text-sm text-purple-300"
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.5, delay: 0.4 }}
+                  >
+                    <span className="relative flex h-2 w-2">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-purple-400 opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-2 w-2 bg-purple-500"></span>
+                    </span>
+                    {t('blog.badge')}
+                  </motion.div>
 
-                    <h3 className="text-xl font-medium group-hover:text-muted-foreground transition-colors duration-300">
-                      {post.title}
-                    </h3>
+                  <motion.h2
+                    className="text-5xl lg:text-6xl font-bold bg-gradient-to-r from-purple-200 via-blue-200 to-cyan-200 bg-clip-text text-transparent"
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.8, delay: 0.5 }}
+                  >
+                    {t('blog.title')}
+                  </motion.h2>
 
-                    <p className="text-muted-foreground leading-relaxed">{post.excerpt}</p>
+                  <motion.p
+                    className="text-xl lg:text-2xl text-gray-300 max-w-3xl mx-auto leading-relaxed"
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.8, delay: 0.6 }}
+                  >
+                    {t('blog.description')}
+                  </motion.p>
 
-                    <button
-                      onClick={handleReadMore}
-                      className="flex items-center gap-2 text-sm text-muted-foreground group-hover:text-foreground transition-colors duration-300 cursor-pointer hover:opacity-80"
+                  <motion.div
+                    className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-4"
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.8, delay: 0.7 }}
+                  >
+                    <Link
+                      href="https://kreulich-blog.vercel.app"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group/btn relative inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 rounded-xl text-white font-medium transition-all duration-300 hover:shadow-2xl hover:shadow-purple-500/50 hover:scale-105"
                     >
-                      <span>{t('thoughts.read_more')}</span>
+                      <span className="relative z-10">{t('blog.cta')}</span>
                       <svg
-                        className="w-4 h-4 transform group-hover:translate-x-1 transition-transform duration-300"
+                        className="w-5 h-5 relative z-10 transform group-hover/btn:translate-x-1 transition-transform duration-300"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -933,11 +1018,102 @@ export default function Home() {
                           d="M17 8l4 4m0 0l-4 4m4-4H3"
                         />
                       </svg>
-                    </button>
+                      <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-purple-400 to-blue-400 opacity-0 group-hover/btn:opacity-100 blur transition-opacity duration-300"></div>
+                    </Link>
+
+                    <div className="flex items-center gap-2 text-sm text-gray-400">
+                      <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z" />
+                      </svg>
+                      <span>{t('blog.subtitle')}</span>
+                    </div>
+                  </motion.div>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Cards de Categorias/Tópicos */}
+            <motion.div
+              className="grid lg:grid-cols-3 gap-6"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, delay: 0.3 }}
+            >
+              {[
+                {
+                  icon: "💻",
+                  title: t('blog.topic1.title'),
+                  description: t('blog.topic1.description'),
+                  color: "from-blue-500/10 to-cyan-500/10 hover:from-blue-500/20 hover:to-cyan-500/20 border-blue-500/30"
+                },
+                {
+                  icon: "🚀",
+                  title: t('blog.topic2.title'),
+                  description: t('blog.topic2.description'),
+                  color: "from-purple-500/10 to-pink-500/10 hover:from-purple-500/20 hover:to-pink-500/20 border-purple-500/30"
+                },
+                {
+                  icon: "🧠",
+                  title: t('blog.topic3.title'),
+                  description: t('blog.topic3.description'),
+                  color: "from-green-500/10 to-emerald-500/10 hover:from-green-500/20 hover:to-emerald-500/20 border-green-500/30"
+                }
+              ].map((topic, index) => (
+                <motion.div
+                  key={index}
+                  className={`group relative bg-gradient-to-br ${topic.color} backdrop-blur-sm border rounded-2xl p-6 transition-all duration-500 hover:shadow-xl hover:-translate-y-2 cursor-pointer`}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.8, delay: 0.4 + index * 0.1 }}
+                  whileHover={{ scale: 1.05 }}
+                >
+                  <div className="space-y-4">
+                    <div className="text-4xl">{topic.icon}</div>
+                    <h3 className="text-xl font-semibold text-foreground">{topic.title}</h3>
+                    <p className="text-muted-foreground leading-relaxed">{topic.description}</p>
                   </div>
-                </article>
+
+                  {/* Efeito de brilho no hover */}
+                  <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-white/0 to-white/0 group-hover:from-white/5 group-hover:to-white/10 transition-all duration-500 pointer-events-none"></div>
+                </motion.div>
               ))}
-            </div>
+            </motion.div>
+
+            {/* Call to Action Final */}
+            <motion.div
+              className="text-center"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, delay: 0.5 }}
+            >
+              <p className="text-muted-foreground text-lg mb-6">
+                {t('blog.footer_text')}
+              </p>
+              <Link
+                href="https://kreulich-blog.vercel.app"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 text-purple-400 hover:text-purple-300 transition-colors duration-300 group"
+              >
+                <span className="text-sm font-medium">{t('blog.footer_cta')}</span>
+                <svg
+                  className="w-4 h-4 transform group-hover:translate-x-1 transition-transform duration-300"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M13 7l5 5m0 0l-5 5m5-5H6"
+                  />
+                </svg>
+              </Link>
+            </motion.div>
           </div>
         </motion.section>
 
@@ -998,10 +1174,159 @@ export default function Home() {
           </div>
         </motion.section>
 
+        {/* Buy Me a Coffee Section */}
+        <motion.section
+          id="coffee"
+          ref={(el) => {
+            sectionsRef.current[7] = el as HTMLElement | null;
+          }}
+          className="py-32"
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+        >
+          <div className="max-w-5xl mx-auto">
+            <motion.div
+              className="relative overflow-hidden rounded-3xl"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+            >
+              {/* Background com gradiente de café */}
+              <div className="relative bg-gradient-to-br from-amber-900/40 via-orange-900/40 to-yellow-900/40 dark:from-amber-900/60 dark:via-orange-900/60 dark:to-yellow-900/60 backdrop-blur-sm border border-amber-500/30 rounded-3xl p-12 lg:p-16 overflow-hidden group">
+                {/* Efeitos de fundo animados - tema café */}
+                <div className="absolute inset-0 bg-gradient-to-br from-amber-500/20 via-orange-500/20 to-yellow-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+                <div className="absolute inset-0">
+                  <div className="absolute top-0 -left-4 w-72 h-72 bg-amber-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
+                  <div className="absolute top-0 -right-4 w-72 h-72 bg-orange-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000"></div>
+                  <div className="absolute -bottom-8 left-20 w-72 h-72 bg-yellow-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-4000"></div>
+                </div>
+
+                <div className="relative z-10">
+                  {/* Header */}
+                  <div className="text-center space-y-6 mb-12">
+                    <motion.div
+                      className="inline-flex items-center gap-2 px-4 py-2 bg-amber-500/20 border border-amber-500/30 rounded-full text-sm text-amber-300"
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      whileInView={{ opacity: 1, scale: 1 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.5, delay: 0.4 }}
+                    >
+                      <span className="text-2xl animate-bounce">☕</span>
+                      {t('coffee.badge')}
+                    </motion.div>
+
+                    <motion.h2
+                      className="text-5xl lg:text-6xl font-bold bg-gradient-to-r from-amber-200 via-orange-200 to-yellow-200 bg-clip-text text-transparent"
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.8, delay: 0.5 }}
+                    >
+                      {t('coffee.title')}
+                    </motion.h2>
+
+                    <motion.p
+                      className="text-xl text-amber-100 dark:text-amber-200 max-w-3xl mx-auto leading-relaxed"
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.8, delay: 0.6 }}
+                    >
+                      {t('coffee.description')}
+                    </motion.p>
+                  </div>
+
+                  {/* Features Grid */}
+                  <motion.div
+                    className="grid md:grid-cols-3 gap-6 mb-12"
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.8, delay: 0.7 }}
+                  >
+                    {[
+                      { icon: "💻", text: t('coffee.feature1'), color: "from-amber-500 to-orange-500" },
+                      { icon: "🚀", text: t('coffee.feature2'), color: "from-orange-500 to-yellow-500" },
+                      { icon: "🤝", text: t('coffee.feature3'), color: "from-yellow-500 to-amber-500" }
+                    ].map((feature, index) => (
+                      <motion.div
+                        key={index}
+                        className="group/feature relative bg-gradient-to-br from-amber-500/10 to-orange-500/10 dark:from-amber-500/20 dark:to-orange-500/20 backdrop-blur-sm border border-amber-500/30 rounded-2xl p-6 transition-all duration-300 hover:shadow-xl hover:-translate-y-2"
+                        initial={{ opacity: 0, y: 30 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.8, delay: 0.8 + index * 0.1 }}
+                        whileHover={{ scale: 1.05 }}
+                      >
+                        <div className="text-center space-y-3">
+                          <div className="text-4xl transform group-hover/feature:scale-110 transition-transform duration-300">
+                            {feature.icon}
+                          </div>
+                          <p className={`text-sm font-medium bg-gradient-to-r ${feature.color} bg-clip-text text-transparent`}>
+                            {feature.text}
+                          </p>
+                        </div>
+                      </motion.div>
+                    ))}
+                  </motion.div>
+
+                  {/* CTA Button */}
+                  <motion.div
+                    className="text-center"
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.8, delay: 0.9 }}
+                  >
+                    <Link
+                      href="https://buymeacoffee.com/felipekreulich"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group/btn relative inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500 rounded-xl text-white font-bold transition-all duration-300 hover:shadow-2xl hover:shadow-amber-500/50 hover:scale-105 text-lg"
+                    >
+                      {/* Efeito de brilho */}
+                      <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-amber-400 to-orange-400 opacity-0 group-hover/btn:opacity-100 blur transition-opacity duration-300"></div>
+
+                      <span className="relative z-10 text-2xl">☕</span>
+                      <span className="relative z-10">{t('coffee.cta')}</span>
+                      <svg
+                        className="w-5 h-5 relative z-10 transform group-hover/btn:translate-x-1 transition-transform duration-300"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M17 8l4 4m0 0l-4 4m4-4H3"
+                        />
+                      </svg>
+                    </Link>
+
+                    <motion.p
+                      className="mt-6 text-sm text-amber-300 dark:text-amber-400"
+                      initial={{ opacity: 0 }}
+                      whileInView={{ opacity: 1 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.8, delay: 1.0 }}
+                    >
+                      {t('coffee.thanks')}
+                    </motion.p>
+                  </motion.div>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        </motion.section>
+
         <motion.section
           id="connect"
           ref={(el) => {
-            sectionsRef.current[6] = el as HTMLElement | null;
+            sectionsRef.current[8] = el as HTMLElement | null;
           }}
           className="py-32 opacity-0"
         >
@@ -1038,18 +1363,21 @@ export default function Home() {
 
               <div className="grid grid-cols-2 gap-4">
                 {[
-                  { name: "GitHub", handle: "@FelipeKreulich", url: "https://github.com/FelipeKreulich" },
-                  { name: "Twitter", handle: "@FelipeKreulich", url: "https://x.com/FelipeKreulich" },
-                  { name: "LinkedIn", handle: "felipe-kreulich", url: "https://www.linkedin.com/in/felipe-kreulich/" },
-                  { name: "Instagram", handle: "@kreulich.dev", url: "https://www.instagram.com/kreulich.dev/" },
+                  { name: "GitHub", handle: "@FelipeKreulich", url: "https://github.com/FelipeKreulich", gradient: "from-gray-400 to-gray-600", borderColor: "hover:border-gray-500/40" },
+                  { name: "Twitter", handle: "@FelipeKreulich", url: "https://x.com/FelipeKreulich", gradient: "from-blue-400 to-cyan-400", borderColor: "hover:border-blue-500/40" },
+                  { name: "LinkedIn", handle: "felipe-kreulich", url: "https://www.linkedin.com/in/felipe-kreulich/", gradient: "from-blue-500 to-blue-700", borderColor: "hover:border-blue-600/40" },
+                  { name: "Instagram", handle: "@kreulich.dev", url: "https://www.instagram.com/kreulich.dev/", gradient: "from-purple-400 via-pink-500 to-orange-400", borderColor: "hover:border-pink-500/40" },
                 ].map((social) => (
                   <Link
                     key={social.name}
                     href={social.url}
-                    className="group p-4 border border-border rounded-lg hover:border-muted-foreground/50 transition-all duration-300 hover:shadow-sm"
+                    className={`group relative p-4 border border-border ${social.borderColor} rounded-lg transition-all duration-300 hover:shadow-lg hover:-translate-y-1 overflow-hidden`}
                   >
-                    <div className="space-y-2">
-                      <div className="text-foreground group-hover:text-muted-foreground transition-colors duration-300">
+                    {/* Efeito de fundo colorido no hover */}
+                    <div className={`absolute inset-0 bg-gradient-to-r ${social.gradient} opacity-0 group-hover:opacity-5 transition-opacity duration-300`}></div>
+
+                    <div className="relative z-10 space-y-2">
+                      <div className={`font-medium bg-gradient-to-r ${social.gradient} bg-clip-text text-transparent`}>
                         {social.name}
                       </div>
                       <div className="text-sm text-muted-foreground">{social.handle}</div>
@@ -1121,8 +1449,9 @@ export default function Home() {
               </button>
 
               <Link href={config.blog.url} target="_blank">
-                <button className="group p-2 rounded-lg border border-border hover:border-muted-foreground/50 transition-all duration-300">
-                  <span className="text-xs text-muted-foreground group-hover:text-foreground transition-colors duration-300">{t('footer.blog')}</span>
+                <button className="group relative p-2 px-3 rounded-lg border border-purple-500/30 hover:border-purple-400/50 bg-gradient-to-r from-purple-500/10 to-pink-500/10 hover:from-purple-500/20 hover:to-pink-500/20 transition-all duration-300 overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-r from-purple-400/0 via-purple-400/20 to-purple-400/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  <span className="relative text-xs text-purple-400 group-hover:text-purple-300 transition-colors duration-300 font-medium">{t('footer.blog')}</span>
                 </button>
               </Link>
             </div>

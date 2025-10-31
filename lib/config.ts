@@ -6,9 +6,7 @@
 export const config = {
   // Blog URLs
   blog: {
-    url: process.env.NODE_ENV === 'production' 
-      ? process.env.NEXT_PUBLIC_BLOG_URL_PROD || 'https://kreulich-blog.vercel.app'
-      : process.env.NEXT_PUBLIC_BLOG_URL_DEV || 'http://192.168.56.1:3000/'
+    url: process.env.NEXT_PUBLIC_BLOG_URL || 'https://kreulich-blog.vercel.app'
   },
   
   // Environment
