@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { useEffect, useRef, useState } from "react"
-import { motion, useScroll, useTransform, useSpring, useInView } from "framer-motion"
+import { motion } from "framer-motion"
 import { useLanguage } from "../contexts/language/LanguageContext"
 import { toast } from "sonner"
 import { config } from "@/lib/config"
@@ -12,7 +12,7 @@ import dynamic from "next/dynamic"
 const ShapeBlur = dynamic(() => import("@/components/ui/ShapeBlur"), { ssr: false })
 
 export default function Home() {
-  const { isDark, toggleTheme, isLoaded } = useTheme()
+  const { isDark, toggleTheme } = useTheme()
   const [activeSection, setActiveSection] = useState("")
   const sectionsRef = useRef<(HTMLElement | null)[]>([])
   const { language, setLanguage, t } = useLanguage()
@@ -401,6 +401,7 @@ export default function Home() {
                         <div className="absolute inset-0 bg-gradient-to-tl from-cyan-500/15 via-transparent to-purple-500/15 dark:from-cyan-500/35 dark:via-transparent dark:to-purple-500/35 rounded-full blur-xl transition-all duration-300 mix-blend-overlay"></div>
                         <div className="absolute inset-0 opacity-0 dark:opacity-100 bg-gradient-to-r from-green-500/30 via-blue-500/30 to-pink-500/30 rounded-full blur-lg animate-pulse mix-blend-screen"></div>
 
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img
                           src="/eu.png"
                           alt="Felipe Kreulich"
@@ -715,7 +716,7 @@ export default function Home() {
                     </div>
 
                     {/* Renderização condicional do botão */}
-                    {project.type === 'external' && (
+                    {project.type === 'external' && project.url && (
                       <div className="pt-2">
                         <Link
                           href={project.url}
