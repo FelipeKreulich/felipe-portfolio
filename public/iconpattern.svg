@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200">
+  <rect width="200" height="200" fill="black"/>
+  <g fill="white" font-family="monospace" font-weight="bold" font-size="28" opacity="0.9">
+    <text x="10" y="35">&lt;/&gt;</text>
+    <text x="110" y="35">{}</text>
+    <text x="60" y="75">&lt;/&gt;</text>
+    <text x="160" y="75">()</text>
+    <text x="10" y="115">{}</text>
+    <text x="110" y="115">&lt;/&gt;</text>
+    <text x="60" y="155">()</text>
+    <text x="160" y="155">{}</text>
+    <text x="10" y="195">&lt;/&gt;</text>
+    <text x="110" y="195">()</text>
+  </g>
+</svg>

@@ -10,6 +10,8 @@ import { useTheme } from "../hooks/use-theme"
 import dynamic from "next/dynamic"
 
 const ShapeBlur = dynamic(() => import("@/components/ui/ShapeBlur"), { ssr: false })
+const ProfileCard = dynamic(() => import("@/components/ProfileCard"), { ssr: false })
+const LightPillar = dynamic(() => import("@/components/LightPillar"), { ssr: false })
 
 export default function Home() {
   const { isDark, toggleTheme } = useTheme()
@@ -108,12 +110,29 @@ export default function Home() {
           ref={(el) => {
             sectionsRef.current[0] = el
           }}
-          className="min-h-screen flex items-center"
+          className="min-h-screen flex items-center relative"
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
         >
-          <div className="grid lg:grid-cols-5 gap-16 w-full">
+          {/* LightPillar Background - breaks out of max-w container */}
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 pointer-events-none z-0" style={{ width: '100vw', height: '100%' }}>
+            <LightPillar
+              topColor="#5227FF"
+              bottomColor="#FF9FFC"
+              intensity={1}
+              rotationSpeed={0.3}
+              glowAmount={0.002}
+              pillarWidth={8}
+              pillarHeight={0.2}
+              noiseIntensity={0.5}
+              pillarRotation={15}
+              interactive={false}
+              mixBlendMode="screen"
+              quality="high"
+            />
+          </div>
+          <div className="grid lg:grid-cols-5 gap-16 w-full relative z-[1]">
             <div className="lg:col-span-3 space-y-8">
               <motion.div
                 className="space-y-2"
@@ -250,7 +269,7 @@ export default function Home() {
               <div className="space-y-4">
                 <div className="text-sm text-muted-foreground font-mono">{t('intro.focus')}</div>
                 <div className="flex flex-wrap gap-2">
-                  {["React", "TypeScript", "Next.js", "PHP", "Laravel", "MySQL", "Design Systems", "UX/UI", "CyberSecurity"].map((skill) => (
+                  {["React", "TypeScript", "Next.js", "PHP", "Laravel", ".NET", "SwiftUI", "MySQL", "PostgreSQL", "CyberSecurity"].map((skill) => (
                     <span
                       key={skill}
                       className={`px-3 py-1 text-xs border rounded-full transition-all duration-300 ${skill === "CyberSecurity"
@@ -303,178 +322,55 @@ export default function Home() {
               {t('about.title')}
             </motion.h2>
 
-            <div className="max-w-4xl mx-auto">
-              <div className="relative group">
-                {/* Card Metálico */}
-                <div
-                  className="relative bg-gradient-to-br from-background via-muted/30 to-background backdrop-blur-sm border border-border rounded-2xl p-8 shadow-2xl overflow-hidden group/card dark:from-zinc-800 dark:via-zinc-700 dark:to-zinc-900 dark:border-zinc-600/50"
-                  onMouseMove={(e) => {
-                    const rect = e.currentTarget.getBoundingClientRect()
-                    const x = ((e.clientX - rect.left) / rect.width) * 100
-                    const y = ((e.clientY - rect.top) / rect.height) * 100
-                    e.currentTarget.style.setProperty('--mouse-x', `${x}%`)
-                    e.currentTarget.style.setProperty('--mouse-y', `${y}%`)
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.setProperty('--mouse-x', '50%')
-                    e.currentTarget.style.setProperty('--mouse-y', '50%')
-                  }}
-                  style={{
-                    '--mouse-x': '50%',
-                    '--mouse-y': '50%'
-                  } as React.CSSProperties}
-                >
-                  {/* Gradiente holográfico principal - Apenas no dark mode */}
-                  <div className="absolute inset-0 opacity-0 dark:opacity-90 mix-blend-multiply dark:mix-blend-multiply">
-                    <div
-                      className="absolute inset-0 rounded-2xl transition-all duration-75"
-                      style={{
-                        background: `radial-gradient(circle at var(--mouse-x) var(--mouse-y),
-                          rgba(220, 160, 225, 0.7) 0%,
-                          rgba(30, 210, 220, 0.6) 30%,
-                          rgba(60, 230, 65, 0.6) 60%,
-                          transparent 80%)`
-                      }}
-                    />
+            <div className="max-w-5xl mx-auto">
+              <div className="grid lg:grid-cols-2 gap-12 items-center">
+                {/* ProfileCard */}
+                <div className="flex justify-center">
+                  <ProfileCard
+                    name="Felipe Kreulich"
+                    title="Fullstack Developer"
+                    handle="kreulich.dev"
+                    status={t('intro.available')}
+                    contactText={t('intro.cv_download')}
+                    avatarUrl="/eu.png"
+                    showUserInfo
+                    enableTilt={true}
+                    enableMobileTilt
+                    onContactClick={handleDownloadCV}
+                    behindGlowColor="rgba(139, 92, 246, 0.5)"
+                    behindGlowEnabled
+                    iconUrl="/iconpattern.svg"
+                    innerGradient="linear-gradient(145deg, #1a1a2e8c 0%, #8b5cf644 100%)"
+                  />
+                </div>
+
+                {/* Informações */}
+                <div className="space-y-6 text-center lg:text-left">
+                  <div>
+                    <p className="text-lg text-muted-foreground leading-relaxed">
+                      {t('about.description')}
+                    </p>
                   </div>
 
-                  {/* Segunda camada de gradiente - apenas dark mode */}
-                  <div className="absolute inset-0 opacity-0 dark:opacity-90 mix-blend-multiply">
-                    <div
-                      className="absolute inset-0 rounded-2xl transition-all duration-75"
-                      style={{
-                        background: `radial-gradient(circle at calc(100% - var(--mouse-x)) calc(100% - var(--mouse-y)),
-                          rgba(30, 210, 220, 0.6) 0%,
-                          rgba(140, 145, 255, 0.5) 40%,
-                          transparent 70%)`
-                      }}
-                    />
-                  </div>
-
-                  {/* Terceira camada - verde - apenas dark mode */}
-                  <div className="absolute inset-0 opacity-0 dark:opacity-90 mix-blend-multiply">
-                    <div
-                      className="absolute inset-0 rounded-2xl transition-all duration-75"
-                      style={{
-                        background: `radial-gradient(circle at var(--mouse-x) calc(100% - var(--mouse-y)),
-                          rgba(60, 230, 65, 0.6) 0%,
-                          rgba(220, 160, 225, 0.5) 30%,
-                          transparent 60%)`
-                      }}
-                    />
-                  </div>
-
-                  {/* Efeito sutil para light mode */}
-                  <div className="absolute inset-0 opacity-0 group-hover/card:opacity-20 dark:opacity-0 transition-opacity duration-300">
-                    <div
-                      className="absolute inset-0 rounded-2xl transition-all duration-75"
-                      style={{
-                        background: `radial-gradient(circle at var(--mouse-x) var(--mouse-y),
-                          rgba(139, 92, 246, 0.3) 0%,
-                          rgba(59, 130, 246, 0.2) 40%,
-                          transparent 70%)`
-                      }}
-                    />
-                  </div>
-
-                  {/* Shimmer effect - ajustado para ambos os modos */}
-                  <div className="absolute inset-0 opacity-0 group-hover/card:opacity-20 dark:group-hover/card:opacity-25 mix-blend-overlay transition-opacity duration-300">
-                    <div
-                      className="absolute inset-0 rounded-2xl transition-all duration-75"
-                      style={{
-                        background: `linear-gradient(calc(var(--mouse-x) * 2deg),
-                          transparent 30%,
-                          rgba(255, 255, 255, 0.6) 50%,
-                          transparent 70%)`
-                      }}
-                    />
-                  </div>
-
-
-
-                  <div className="relative z-10 grid lg:grid-cols-2 gap-8 items-center">
-                    {/* Foto */}
-                    <div className="relative">
-                      <div className="relative w-64 h-64 mx-auto lg:mx-0">
-                        {/* Efeitos holográficos - mais sutis no light mode */}
-                        <div className="absolute inset-0 bg-gradient-to-br from-purple-500/20 via-cyan-500/15 to-green-500/20 dark:from-purple-500/40 dark:via-cyan-500/30 dark:to-green-500/40 rounded-full blur-2xl transition-all duration-300 mix-blend-screen"></div>
-                        <div className="absolute inset-0 bg-gradient-to-tl from-cyan-500/15 via-transparent to-purple-500/15 dark:from-cyan-500/35 dark:via-transparent dark:to-purple-500/35 rounded-full blur-xl transition-all duration-300 mix-blend-overlay"></div>
-                        <div className="absolute inset-0 opacity-0 dark:opacity-100 bg-gradient-to-r from-green-500/30 via-blue-500/30 to-pink-500/30 rounded-full blur-lg animate-pulse mix-blend-screen"></div>
-
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img
-                          src="/eu.png"
-                          alt="Felipe Kreulich"
-                          className="relative w-full h-full object-cover rounded-full border-4 border-border hover:border-purple-500/50 dark:border-purple-500/30 dark:hover:border-cyan-500/50 transition-all duration-500 shadow-2xl dark:shadow-purple-500/20"
-                        />
-
-                        {/* Brilho dinâmico adicional - ajustado para ambos os modos */}
-                        <div className="absolute inset-0 rounded-full opacity-30 dark:opacity-70 mix-blend-overlay">
-                          <div className="absolute inset-0 bg-gradient-to-br from-transparent via-white/40 to-transparent rounded-full"></div>
-                          <div className="absolute inset-0 bg-gradient-to-tl from-transparent via-cyan-500/30 to-transparent rounded-full"></div>
-                        </div>
-
-                        {/* Ring pulsante ao redor - mais sutil no light mode */}
-                        <div className="absolute inset-0 rounded-full border-2 border-purple-500/10 dark:border-purple-500/20 animate-pulse"></div>
-                        <div className="absolute inset-[-4px] rounded-full border border-purple-500/5 dark:border-cyan-500/10"></div>
-                      </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <div className="text-sm text-muted-foreground font-mono">{t('about.age')}</div>
+                      <div className="text-foreground font-medium">{t('about.age_value')}</div>
                     </div>
 
-                    {/* Informações */}
-                    <div className="space-y-6 text-center lg:text-left">
-                      <div>
-                        <p className="text-lg text-muted-foreground leading-relaxed">
-                          {t('about.description')}
-                        </p>
-                      </div>
+                    <div className="space-y-2">
+                      <div className="text-sm text-muted-foreground font-mono">Location</div>
+                      <div className="text-foreground font-medium">{t('about.location_full')}</div>
+                    </div>
 
-                      <div className="grid grid-cols-2 gap-4">
-                        <div className="space-y-2">
-                          <div className="text-sm text-muted-foreground font-mono">{t('about.age')}</div>
-                          <div className="text-foreground font-medium">{t('about.age_value')}</div>
-                        </div>
+                    <div className="space-y-2">
+                      <div className="text-sm text-muted-foreground font-mono">{t('about.interests')}</div>
+                      <div className="text-foreground font-medium text-sm">{t('about.interests_list')}</div>
+                    </div>
 
-                        <div className="space-y-2">
-                          <div className="text-sm text-muted-foreground font-mono">Location</div>
-                          <div className="text-foreground font-medium">{t('about.location_full')}</div>
-                        </div>
-
-                        <div className="space-y-2">
-                          <div className="text-sm text-muted-foreground font-mono">{t('about.interests')}</div>
-                          <div className="text-foreground font-medium text-sm">{t('about.interests_list')}</div>
-                        </div>
-
-                        <div className="space-y-2">
-                          <div className="text-sm text-muted-foreground font-mono">{t('about.available_for')}</div>
-                          <div className="text-foreground font-medium text-sm">{t('about.available_for_value')}</div>
-                        </div>
-                      </div>
-
-                      {/* Botão de download do CV */}
-                      <div className="pt-4">
-                        <button
-                          onClick={handleDownloadCV}
-                          className="group inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-500/10 via-cyan-500/10 to-green-500/10 hover:from-purple-500/20 hover:via-cyan-500/20 hover:to-green-500/20 border border-border/50 hover:border-muted-foreground/50 rounded-lg transition-all duration-300 hover:shadow-lg relative overflow-hidden"
-                        >
-                          {/* Efeito holográfico no botão */}
-                          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-pulse"></div>
-                          <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 via-cyan-500/10 to-green-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 mix-blend-screen"></div>
-                          <svg
-                            className="w-4 h-4 relative z-10"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                            />
-                          </svg>
-                          <span className="relative z-10">{t('intro.cv_download')}</span>
-                        </button>
-                      </div>
+                    <div className="space-y-2">
+                      <div className="text-sm text-muted-foreground font-mono">{t('about.available_for')}</div>
+                      <div className="text-foreground font-medium text-sm">{t('about.available_for_value')}</div>
                     </div>
                   </div>
                 </div>
@@ -529,7 +425,7 @@ export default function Home() {
                   role: t('work.pop.role'),
                   company: t('work.pop.company'),
                   description: t('work.pop.description'),
-                  tech: ["PHP", "Laravel", "MySQL", "React", "TypeScript", "Next.js"],
+                  tech: ["PHP", "Laravel", "Next.js", "MySQL", "SwiftUI"],
                   gradient: "from-purple-500 to-pink-500",
                   borderColor: "border-purple-500/30 hover:border-purple-500/60"
                 },
@@ -538,12 +434,12 @@ export default function Home() {
                   role: t('work.az.role'),
                   company: t('work.az.company'),
                   description: t('work.az.description'),
-                  tech: ["NextJS", "MySQL", "React", "Typescript"],
+                  tech: ["Next.js", "MySQL", "React", "TypeScript"],
                   gradient: "from-blue-500 to-cyan-500",
                   borderColor: "border-blue-500/30 hover:border-blue-500/60"
                 },
                 {
-                  year: "2023",
+                  year: "2024",
                   role: t('work.cstc.role'),
                   company: t('work.cstc.company'),
                   description: t('work.cstc.description'),
@@ -556,7 +452,7 @@ export default function Home() {
                   role: t('work.army.role'),
                   company: t('work.army.company'),
                   description: t('work.army.description'),
-                  tech: ["React", "TypeScript", "Next.js"],
+                  tech: ["React", "TypeScript", "Next.js", "Networking", "CyberSecurity"],
                   gradient: "from-orange-500 to-amber-500",
                   borderColor: "border-orange-500/30 hover:border-orange-500/60"
                 },
@@ -642,7 +538,7 @@ export default function Home() {
               </motion.p>
             </motion.div>
 
-            <div className="grid lg:grid-cols-3 gap-8">
+            <div className="grid md:grid-cols-2 gap-8">
               {[
                 {
                   title: t('projects.portfolio.title'),
@@ -662,7 +558,19 @@ export default function Home() {
                   color: 'from-purple-500/10 to-pink-500/10 hover:from-purple-500/20 hover:to-pink-500/20',
                   borderColor: 'hover:border-purple-500/40',
                   shadowColor: 'hover:shadow-purple-500/20',
-                  type: 'coming-soon'
+                  type: 'external',
+                  url: 'https://worm-hole.vercel.app'
+                },
+                {
+                  title: t('projects.ciphermesh.title'),
+                  description: t('projects.ciphermesh.description'),
+                  tech: t('projects.ciphermesh.tech'),
+                  link: t('projects.ciphermesh.link'),
+                  color: 'from-red-500/10 to-orange-500/10 hover:from-red-500/20 hover:to-orange-500/20',
+                  borderColor: 'hover:border-red-500/40',
+                  shadowColor: 'hover:shadow-red-500/20',
+                  type: 'external',
+                  url: 'https://github.com/FelipeKreulich/secret-chat-lan'
                 },
                 {
                   title: t('projects.blog.title'),
