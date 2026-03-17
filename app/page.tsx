@@ -116,7 +116,7 @@ export default function Home() {
           transition={{ duration: 0.8, ease: "easeOut" }}
         >
           {/* LightPillar Background - breaks out of max-w container */}
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 pointer-events-none z-0" style={{ width: '100vw', height: '100%' }}>
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 pointer-events-none z-0 overflow-hidden" style={{ width: '100vw', height: '100%', maxWidth: '100vw' }}>
             <LightPillar
               topColor="#5227FF"
               bottomColor="#FF9FFC"
@@ -132,8 +132,8 @@ export default function Home() {
               quality="high"
             />
           </div>
-          <div className="grid lg:grid-cols-5 gap-16 w-full relative z-[1]">
-            <div className="lg:col-span-3 space-y-8">
+          <div className="grid lg:grid-cols-5 gap-8 lg:gap-16 w-full relative z-[1]">
+            <div className="lg:col-span-3 space-y-6 lg:space-y-8">
               <motion.div
                 className="space-y-2"
                 initial={{ opacity: 0, x: -50 }}
@@ -180,7 +180,7 @@ export default function Home() {
                 </motion.p>
 
                 <motion.div
-                  className="flex items-center gap-4 text-sm text-muted-foreground"
+                  className="flex flex-wrap items-center gap-3 sm:gap-4 text-sm text-muted-foreground"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.8, delay: 1.2, ease: "easeOut" }}
@@ -323,9 +323,9 @@ export default function Home() {
             </motion.h2>
 
             <div className="max-w-5xl mx-auto">
-              <div className="grid lg:grid-cols-2 gap-12 items-center">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
                 {/* ProfileCard */}
-                <div className="flex justify-center">
+                <div className="flex justify-center max-w-[280px] sm:max-w-[320px] lg:max-w-none mx-auto lg:mx-0">
                   <ProfileCard
                     name="Felipe Kreulich"
                     title="Fullstack Developer"
