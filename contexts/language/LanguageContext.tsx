@@ -194,6 +194,7 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
         'nav.calendar': 'Calendar',
         'nav.connect': 'Connect',
         'nav.about': 'About',
+        'nav.coffee': 'Coffee',
         
         // Not Found Page
         'not_found.title': 'Page Not Found',
@@ -359,6 +360,7 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
         'nav.calendar': 'Agenda',
         'nav.connect': 'Conectar',
         'nav.about': 'Sobre',
+        'nav.coffee': 'Café',
         
         // Not Found Page
         'not_found.title': 'Página não encontrada',
