@@ -1,8 +1,11 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+/* `clip` em vez de `hidden`: o `hidden` transforma o elemento em scroll
+   container, o que quebra `position: sticky` nos descendentes e desalinha o
+   pinning do ScrollTrigger. O `clip` corta na mesma, sem criar o container. */
 html, body {
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 @custom-variant dark (&:is(.dark *));
@@ -39,8 +42,31 @@ html, body {
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
-  --background: oklch(1 0 0);
+  /*
+     Papel morno, não branco puro.
+
+     O branco absoluto é uma escolha dura: a secção Manifesto, que é um ecrã
+     inteiro de trama sobre o fundo, ficava a brilhar ao lado do resto do site.
+     O croma é mínimo (0.008) — chega para tirar o clínico sem virar bege.
+  */
+  --background: oklch(0.977 0.008 85);
   --foreground: oklch(0.145 0 0);
+
+  /* Preloader (tema claro). Segue o tema do site, mas com um contraste um
+     pouco mais fundo que o `--background`: o ecrã de entrada é uma cortina que
+     abre para o hero, não a mesma superfície. */
+  --preloader-bg: #FAFAFB;
+  --preloader-fg: oklch(0.145 0 0);
+  /* Ciano escurecido e mais saturado. O tom claro que funciona sobre preto
+     desaparece por completo sobre branco. */
+  --preloader-accent: oklch(0.62 0.13 220);
+  /* Anel de scan da hero. Mesma família do ciano do preloader. */
+  --hero-scan: oklch(0.62 0.13 220);
+
+  /* Grelha de fundo. Em hex e não em oklch de propósito: o GSAP interpola
+     hex/rgb/hsl, e estas duas variáveis são tweened por secção. */
+  --bg-grid: #14151a;
+  --bg-accent: #157c96;
 }
 
 .dark {
@@ -76,10 +102,21 @@ html, body {
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
+
+  /* Preloader (tema escuro). O #08090A é mais fundo que o `--background` do
+     site, por isso o dissolve abre para uma superfície mais clara. */
+  --preloader-bg: #08090A;
+  --preloader-fg: oklch(0.985 0 0);
+  --preloader-accent: oklch(0.84 0.12 205);
+  --hero-scan: oklch(0.84 0.12 205);
+
+  --bg-grid: #e6eaee;
+  --bg-accent: #7fd8e8;
 }
 
 @theme inline {
-  /* optional: --font-sans, --font-serif, --font-mono if they are applied in the layout.tsx */
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-ibm-plex-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -124,6 +161,36 @@ html, body {
   }
   body {
     @apply bg-background text-foreground;
+
+    /*
+      Arrastar o cursor deixa de pintar texto de azul.
+
+      Sem isto, qualquer gesto sobre a hero, o percurso ou a faixa de stack
+      acabava com meia página seleccionada — as interações do site são todas
+      de arrastar e passar o cursor, nunca de ler com o rato.
+    */
+    -webkit-user-select: none;
+    user-select: none;
+
+    /*
+      O rubber band do fim da página conta como scroll e dispara refreshes do
+      ScrollTrigger — que se vêem como saltos. Cortar o overscroll vertical
+      não afecta o momentum, só o estica-e-volta das bordas.
+    */
+    overscroll-behavior-y: none;
+  }
+
+  /*
+    O que existe para ser copiado continua a poder ser copiado: campos de
+    formulário (onde `none` partiria a escrita), e tudo o que marcar
+    `data-selectable` — endereços de email, comandos, números.
+  */
+  input,
+  textarea,
+  [contenteditable],
+  [data-selectable] {
+    -webkit-user-select: text;
+    user-select: text;
   }
 }
 

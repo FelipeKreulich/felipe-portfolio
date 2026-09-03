@@ -1,7 +1,5 @@
 "use client"
 
-import { useEffect } from 'react'
-import { useLanguage } from '@/contexts/language/LanguageContext'
 import { Toaster } from '@/components/ui/sonner'
 
 interface ClientLayoutProps {
@@ -9,13 +7,11 @@ interface ClientLayoutProps {
 }
 
 export default function ClientLayout({ children }: ClientLayoutProps) {
-  const { language } = useLanguage()
-
-  useEffect(() => {
-    // Atualizar o atributo lang do HTML baseado no idioma selecionado
-    document.documentElement.lang = language === 'pt' ? 'pt-PT' : 'en'
-  }, [language])
-
+  /*
+    O `lang` do <html> deixou de ser escrito aqui. Passou a vir do layout da
+    rota, servido no HTML — escrevê-lo por JavaScript significava que o
+    crawler nunca o via.
+  */
   return (
     <>
       {children}

@@ -39,3 +39,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+.playwright-mcp/
+
+# Originais de media (32MB): fonte dos scripts em scripts/, não do build.
+# O que o site serve são as variantes geradas, que estão em public/.
+# Ficam fora do git para não fixar 32MB no histórico de forma permanente.
+assets/

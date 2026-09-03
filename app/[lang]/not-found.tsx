@@ -1,8 +1,8 @@
 "use client"
 
-import { useLanguage } from '../contexts/language/LanguageContext'
+import { useLanguage } from '@/contexts/language/LanguageContext'
 import Link from 'next/link'
-import { Button } from '../components/ui/button'
+import { Button } from '@/components/ui/button'
 import { ArrowLeft, Mail, Home } from 'lucide-react'
 
 export default function NotFound() {

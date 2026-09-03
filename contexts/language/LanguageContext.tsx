@@ -1,8 +1,12 @@
 "use client"
 
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react'
+import React, { createContext, useCallback, useContext, useMemo, type ReactNode } from 'react'
+import { usePathname, useRouter } from 'next/navigation'
+import { dictionaries } from '@/lib/i18n/dictionaries'
+import { locales, type Locale } from '@/lib/i18n/config'
 
-type Language = 'en' | 'pt'
+/** Mantido por compatibilidade com o resto do código. */
+type Language = Locale
 
 interface LanguageContextType {
   language: Language
@@ -20,368 +24,66 @@ export const useLanguage = () => {
   return context
 }
 
+/** Lembra a escolha para a próxima visita; a rota continua a mandar. */
+const STORAGE_KEY = 'portfolio-language'
+
+export function rememberLocale(locale: Locale) {
+  try {
+    localStorage.setItem(STORAGE_KEY, locale)
+  } catch {
+    // Modo privado. Sem persistência, mas nada rebenta.
+  }
+}
+
+export function readRememberedLocale(): Locale | null {
+  try {
+    const value = localStorage.getItem(STORAGE_KEY)
+    return value && (locales as readonly string[]).includes(value) ? (value as Locale) : null
+  } catch {
+    return null
+  }
+}
+
 interface LanguageProviderProps {
+  /** Vem do segmento da rota, resolvido no servidor. */
+  locale: Locale
   children: ReactNode
 }
 
-export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) => {
-  const [language, setLanguageState] = useState<Language>('en')
+/**
+ * O idioma deixou de ser estado do cliente e passou a ser a rota.
+ *
+ * Antes vivia num `useState` alimentado pelo localStorage, o que significava
+ * que o HTML servido não tinha idioma nenhum — o conteúdo só aparecia depois
+ * de o JavaScript correr. Agora `/pt` e `/en` são páginas reais, geradas
+ * estaticamente, e trocar de idioma é navegar.
+ */
+export const LanguageProvider: React.FC<LanguageProviderProps> = ({ locale, children }) => {
+  const router = useRouter()
+  const pathname = usePathname()
 
-  useEffect(() => {
-    // Recuperar idioma salvo no localStorage
-    const savedLanguage = localStorage.getItem('portfolio-language') as Language
-    if (savedLanguage && (savedLanguage === 'en' || savedLanguage === 'pt')) {
-      setLanguageState(savedLanguage)
-    }
-  }, [])
-
-  const setLanguage = (lang: Language) => {
-    setLanguageState(lang)
-    localStorage.setItem('portfolio-language', lang)
-  }
-
-  const t = (key: string): string => {
-    const translations = {
-      en: {
-        // Header
-        'portfolio.year': 'PORTFOLIO / 2025',
-        'intro.title': 'Felipe',
-        'intro.subtitle': 'Kreulich',
-        'intro.description': 'Full Stack Developer crafting digital experiences at the intersection of',
-        'intro.design': 'design',
-        'intro.technology': 'technology',
-        'intro.and': 'and',
-        'intro.human_behavior': 'human behavior',
-        'intro.available': 'Available for work',
-        'intro.location': 'Lisboa, Portugal',
-        'intro.cv_download': 'Download CV',
-        'intro.currently': 'CURRENTLY',
-        'intro.role': 'Full Stack Developer',
-        'intro.company': '@ POP Tecnologia e Mobilidade',
-        'intro.period': '2025 — Present',
-        'intro.focus': 'FOCUS',
-        
-        // Work Section
-        'work.title': 'Selected Work',
-        'work.period': '2021 — Present',
-        'work.army.role': 'IT Technician / Developer',
-        'work.army.company': '9th Army Police Battalion – STIC',
-        'work.army.description': 'Development and maintenance of internal administrative management systems. Cybersecurity: vulnerability monitoring and application of preventive measures. Internal network administration and hardware/software technical support.',
-        'work.cstc.role': 'Fullstack Developer',
-        'work.cstc.company': 'CSTC Consulting',
-        'work.cstc.description': 'Development of a school management software. Contributed to PeopleRH platform (human resources management).',
-        'work.pop.role': 'Fullstack Developer',
-        'work.pop.company': 'POP Tecnologia',
-        'work.pop.description': 'End-to-end development of the company\'s Web Portal (PHP, Laravel, Next.js, MySQL). Design and integration of REST APIs for the mobile team (SwiftUI). Server configuration and maintenance.',
-        'work.az.role': 'Support Analyst',
-        'work.az.company': 'AZ Tecnologia e Gestão',
-        'work.az.description': 'Technical ticket management with focus on fast resolution. Developed strategies to optimize task distribution and team workflow.',
-        
-        // Projects Section
-        'projects.title': 'Featured Projects',
-        'projects.description': 'A selection of my recent work and personal projects.',
-        'projects.portfolio.title': 'Portfolio Website',
-        'projects.portfolio.description': 'Modern portfolio built with Next.js, TypeScript, and Tailwind CSS. Features dark/light theme, multilingual support, and responsive design.',
-        'projects.portfolio.tech': 'Next.js, TypeScript, Tailwind CSS',
-        'projects.portfolio.link': 'View Project',
-        'projects.wormhole.title': 'Worm Hole',
-        'projects.wormhole.description': 'Private file sharing SaaS with CI/CD, Cron jobs, encryption, and unique links with auto-expiry.',
-        'projects.wormhole.tech': 'Next.js, TypeScript, Tailwind CSS, Prisma, NeonDB, Vercel',
-        'projects.wormhole.link': 'View Project',
-        'projects.blog.title': 'Personal Blog',
-        'projects.blog.description': 'Active blog built with React + Prisma + PostgreSQL.',
-        'projects.blog.tech': 'React, TypeScript, Prisma, PostgreSQL',
-        'projects.blog.link': 'View Project',
-        'projects.ciphermesh.title': 'CipherMesh',
-        'projects.ciphermesh.description': 'E2EE LAN chat with blind-relay WebSocket, Curve25519 + XSalsa20-Poly1305, Double Ratchet, PFS, P2P via mDNS, and Terminal UI.',
-        'projects.ciphermesh.tech': 'WebSocket, Curve25519, XSalsa20-Poly1305, mDNS, Terminal UI',
-        'projects.ciphermesh.link': 'View Project',
-        'projects.technologies': 'Technologies',
-        
-        // Services Section
-        'services.title': 'Services',
-        'services.description': 'How I can help bring your ideas to life.',
-        'services.development.title': 'Web Development',
-        'services.development.description': 'Full-stack web applications with modern technologies and best practices.',
-        'services.development.features': 'React & Next.js, TypeScript, Node.js, Database Design, API Development',
-        'services.design.title': 'UI/UX Design',
-        'services.design.description': 'User-centered design solutions that combine aesthetics with functionality.',
-        'services.design.features': 'User Interface Design, User Experience, Prototyping, Design Systems, Responsive Design',
-        'services.maintenance.title': 'Maintenance & Support',
-        'services.maintenance.description': 'Ongoing support and maintenance to keep your applications running smoothly.',
-        'services.maintenance.features': 'Bug Fixes, Performance Optimization, Security Updates, Feature Updates, Technical Support',
-        'services.consulting.title': 'Technical Consulting',
-        'services.consulting.description': 'Strategic guidance on technology decisions and project architecture.',
-        'services.consulting.features': 'Code Review, Architecture Planning',
-        'services.contact.title': 'Ready to Start Your Project?',
-        'services.contact.description': 'Whether you need a quote or just want to discuss your ideas, I\'m here to help.',
-        'services.contact.quote_button': 'Request Quote',
-        'services.contact.question_button': 'Ask a Question',
-        'services.contact.quote_subject': 'Project Quote Request',
-        'services.contact.question_subject': 'General Question',
-        'nav.services': 'Services',
-        
-        // Blog Section
-        'blog.badge': 'Now Available',
-        'blog.title': 'Explore My Blog',
-        'blog.description': 'Dive into articles about technology, development, and insights from my journey as a developer.',
-        'blog.cta': 'Visit Blog',
-        'blog.subtitle': 'New articles every week',
-        'blog.topic1.title': 'Web Development',
-        'blog.topic1.description': 'Modern techniques, frameworks, and best practices for building amazing web applications.',
-        'blog.topic2.title': 'Career & Growth',
-        'blog.topic2.description': 'Tips, experiences, and lessons learned throughout my journey as a developer.',
-        'blog.topic3.title': 'Technology & AI',
-        'blog.topic3.description': 'Exploring the latest in technology, artificial intelligence, and their impact on development.',
-        'blog.footer_text': 'Join me on this journey of continuous learning and discovery.',
-        'blog.footer_cta': 'Read all articles',
-
-        // Thoughts Section (kept for backwards compatibility)
-        'thoughts.title': 'Recent Thoughts',
-        'thoughts.future.title': 'The Future of Web Development',
-        'thoughts.future.excerpt': 'Exploring how AI and automation are reshaping the way we build for the web.',
-        'thoughts.design.title': 'Design Systems at Scale',
-        'thoughts.design.excerpt': 'Lessons learned from building and maintaining design systems across multiple products.',
-        'thoughts.performance.title': 'Performance-First Development',
-        'thoughts.performance.excerpt': 'Why performance should be a first-class citizen in your development workflow.',
-        'thoughts.code_review.title': 'The Art of Code Review',
-        'thoughts.code_review.excerpt': 'Building better software through thoughtful and constructive code reviews.',
-        'thoughts.read_more': 'Read more',
-        'thoughts.feature_coming_soon': 'This feature is still being added. Coming soon!',
-        
-        // Calendar Section
-        'calendar.title': 'Schedule a Meeting',
-        'calendar.description': "Let's talk about your project and how I can help!",
-
-        // Buy Me a Coffee Section
-        'coffee.title': 'Support My Work',
-        'coffee.subtitle': 'Enjoying my content?',
-        'coffee.description': 'If you find my work valuable and want to support what I do, consider buying me a coffee! Your support helps me continue creating content, open-source projects, and sharing knowledge with the community.',
-        'coffee.cta': 'Buy Me a Coffee',
-        'coffee.badge': 'Every coffee counts!',
-        'coffee.feature1': 'Support open-source',
-        'coffee.feature2': 'Fund new projects',
-        'coffee.feature3': 'Community driven',
-        'coffee.thanks': 'Thank you for your support!',
-
-        // Connect Section
-        'connect.title': "Let's Connect",
-        'connect.description': 'Always interested in new opportunities, collaborations, and conversations about technology and design.',
-        'connect.email': 'contato.felipe.kreulich@gmail.com',
-        'connect.elsewhere': 'ELSEWHERE',
-        
-        // About Section
-        'about.title': 'About Me',
-        'about.description': 'Fullstack Developer with end-to-end experience in web and mobile projects. Core stack: Laravel, Next.js, ReactJS, .NET and SwiftUI. Background in cybersecurity and networking.',
-        'about.age': 'Age',
-        'about.age_value': '23 years',
-        'about.location_full': 'Lisboa, Portugal',
-        'about.interests': 'Interests',
-        'about.interests_list': 'Technology, Design, Music, Travel',
-        'about.available_for': 'Available for',
-        'about.available_for_value': 'Freelance & Full-time',
-        
-        // Footer
-        'footer.copyright': '© 2025 Felipe Kreulich. All rights reserved.',
-        'footer.built_with': 'Built with ❤️ by Felipe Kreulich',
-        'footer.blog': 'Visit my blog',
-        
-        // Navigation
-        'nav.intro': 'Intro',
-        'nav.work': 'Work',
-        'nav.projects': 'Projects',
-        'nav.thoughts': 'Blog',
-        'nav.calendar': 'Calendar',
-        'nav.connect': 'Connect',
-        'nav.about': 'About',
-        'nav.coffee': 'Coffee',
-        
-        // Not Found Page
-        'not_found.title': 'Page Not Found',
-        'not_found.subtitle': '404',
-        'not_found.description': 'The page you are looking for does not exist or has been moved.',
-        'not_found.back_home': 'Back to Home',
-        'not_found.or': 'or',
-        'not_found.contact': 'contact me',
-        'not_found.if_need_help': 'if you need help.',
-        
-        // Loading
-        'loading.text': 'Loading...',
-      },
-      pt: {
-        // Header
-        'portfolio.year': 'PORTFÓLIO / 2025',
-        'intro.title': 'Felipe',
-        'intro.subtitle': 'Kreulich',
-        'intro.description': 'Full Stack Developer criando experiências digitais na interseção entre',
-        'intro.design': 'design',
-        'intro.technology': 'tecnologia',
-        'intro.and': 'e',
-        'intro.human_behavior': 'comportamento humano',
-        'intro.available': 'Disponível para trabalho',
-        'intro.location': 'Lisboa, Portugal',
-        'intro.cv_download': 'Download CV',
-        'intro.currently': 'ATUALMENTE',
-        'intro.role': 'Full Stack Developer',
-        'intro.company': '@ POP Tecnologia e Mobilidade',
-        'intro.period': '2025 — Presente',
-        'intro.focus': 'FOCO',
-        
-        // Work Section
-        'work.title': 'Trabalhos Selecionados',
-        'work.period': '2021 — Presente',
-        'work.army.role': 'Técnico de TI / Desenvolvedor',
-        'work.army.company': '9.º Batalhão de Polícia do Exército – STIC',
-        'work.army.description': 'Desenvolvimento e manutenção de sistemas internos de gestão administrativa. Cibersegurança: monitorização de vulnerabilidades e aplicação de medidas preventivas. Administração de redes internas e suporte técnico de hardware/software.',
-        'work.cstc.role': 'Desenvolvedor Fullstack',
-        'work.cstc.company': 'CSTC Consulting',
-        'work.cstc.description': 'Desenvolvimento de software de gestão escolar. Contribuição na plataforma PeopleRH (gestão de recursos humanos).',
-        'work.pop.role': 'Desenvolvedor Fullstack',
-        'work.pop.company': 'POP Tecnologia',
-        'work.pop.description': 'Desenvolvimento completo do Portal Web da empresa (PHP, Laravel, Next.js, MySQL). Criação e integração de APIs REST para a equipa mobile (SwiftUI). Configuração e manutenção de servidor.',
-        'work.az.role': 'Analista de Suporte',
-        'work.az.company': 'AZ Tecnologia e Gestão',
-        'work.az.description': 'Gestão de chamados técnicos com foco em resolução ágil. Desenvolvimento de estratégias para otimização do fluxo de trabalho da equipa.',
-        
-        // Projects Section
-        'projects.title': 'Projetos em Destaque',
-        'projects.description': 'Uma seleção dos meus trabalhos recentes e projetos pessoais.',
-        'projects.portfolio.title': 'Website Portfolio',
-        'projects.portfolio.description': 'Portfolio moderno construído com Next.js, TypeScript e Tailwind CSS. Inclui tema escuro/claro, suporte multilíngue e design responsivo.',
-        'projects.portfolio.tech': 'Next.js, TypeScript, Tailwind CSS',
-        'projects.portfolio.link': 'Ver Projeto',
-        'projects.wormhole.title': 'Worm Hole',
-        'projects.wormhole.description': 'SaaS de partilha de ficheiros privada com CI/CD, Cron jobs, encriptação e links únicos com expiração automática.',
-        'projects.wormhole.tech': 'Next.js, TypeScript, Tailwind CSS, Prisma, NeonDB, Vercel',
-        'projects.wormhole.link': 'Ver Projeto',
-        'projects.blog.title': 'Blog Pessoal',
-        'projects.blog.description': 'Blog ativo em React + Prisma + PostgreSQL.',
-        'projects.blog.tech': 'React, TypeScript, Prisma, PostgreSQL',
-        'projects.blog.link': 'Ver Projeto',
-        'projects.ciphermesh.title': 'CipherMesh',
-        'projects.ciphermesh.description': 'Chat E2EE para LAN com WebSocket relay cego, Curve25519 + XSalsa20-Poly1305, Double Ratchet, PFS, modo P2P via mDNS e Terminal UI.',
-        'projects.ciphermesh.tech': 'WebSocket, Curve25519, XSalsa20-Poly1305, mDNS, Terminal UI',
-        'projects.ciphermesh.link': 'Ver Projeto',
-        'projects.technologies': 'Tecnologias',
-        
-        // Services Section
-        'services.title': 'Serviços',
-        'services.description': 'Como posso ajudar a dar vida às suas ideias.',
-        'services.development.title': 'Desenvolvimento Web',
-        'services.development.description': 'Aplicações web full-stack com tecnologias modernas e melhores práticas.',
-        'services.development.features': 'React & Next.js, TypeScript, Node.js, Design de Base de Dados, Desenvolvimento de APIs',
-        'services.design.title': 'Design UI/UX',
-        'services.design.description': 'Soluções de design centradas no utilizador que combinam estética com funcionalidade.',
-        'services.design.features': 'Design de Interface, Experiência do Utilizador, Prototipagem, Sistemas de Design, Design Responsivo',
-        'services.maintenance.title': 'Manutenção e Suporte',
-        'services.maintenance.description': 'Suporte contínuo e manutenção para manter as suas aplicações a funcionar perfeitamente.',
-        'services.maintenance.features': 'Correção de Bugs, Otimização de Performance, Atualizações de Segurança, Atualizações de Funcionalidades, Suporte Técnico',
-        'services.consulting.title': 'Consultoria Técnica',
-        'services.consulting.description': 'Orientação estratégica sobre decisões tecnológicas e arquitetura de projetos.',
-        'services.consulting.features': 'Revisão de Código, Planeamento de Arquitetura',
-        'services.contact.title': 'Pronto para Começar o Seu Projeto?',
-        'services.contact.description': 'Seja para solicitar um orçamento ou apenas discutir as suas ideias, estou aqui para ajudar.',
-        'services.contact.quote_button': 'Solicitar Orçamento',
-        'services.contact.question_button': 'Fazer uma Pergunta',
-        'services.contact.quote_subject': 'Solicitação de Orçamento de Projeto',
-        'services.contact.question_subject': 'Pergunta Geral',
-        'nav.services': 'Serviços',
-        
-        // Blog Section
-        'blog.badge': 'Disponível Agora',
-        'blog.title': 'Explore o Meu Blog',
-        'blog.description': 'Mergulhe em artigos sobre tecnologia, desenvolvimento e insights da minha jornada como programador.',
-        'blog.cta': 'Visitar Blog',
-        'blog.subtitle': 'Novos artigos toda semana',
-        'blog.topic1.title': 'Desenvolvimento Web',
-        'blog.topic1.description': 'Técnicas modernas, frameworks e melhores práticas para construir aplicações web incríveis.',
-        'blog.topic2.title': 'Carreira e Crescimento',
-        'blog.topic2.description': 'Dicas, experiências e lições aprendidas ao longo da minha jornada como programador.',
-        'blog.topic3.title': 'Tecnologia e IA',
-        'blog.topic3.description': 'Explorando o mais recente em tecnologia, inteligência artificial e seu impacto no desenvolvimento.',
-        'blog.footer_text': 'Junte-se a mim nesta jornada de aprendizado contínuo e descoberta.',
-        'blog.footer_cta': 'Ler todos os artigos',
-
-        // Thoughts Section (kept for backwards compatibility)
-        'thoughts.title': 'Pensamentos Recentes',
-        'thoughts.future.title': 'O Futuro do Desenvolvimento Web',
-        'thoughts.future.excerpt': 'Explorando como a IA e automação estão a reformular a forma como construímos para a web.',
-        'thoughts.design.title': 'Sistemas de Design em Escala',
-        'thoughts.design.excerpt': 'Lições aprendidas ao construir e manter sistemas de design em múltiplos produtos.',
-        'thoughts.performance.title': 'Desenvolvimento com Foco na Performance',
-        'thoughts.performance.excerpt': 'Por que a performance deve ser um cidadão de primeira classe no seu fluxo de trabalho de desenvolvimento.',
-        'thoughts.code_review.title': 'A Arte da Revisão de Código',
-        'thoughts.code_review.excerpt': 'Construir software melhor através de revisões de código pensativas e construtivas.',
-        'thoughts.read_more': 'Ler mais',
-        'thoughts.feature_coming_soon': 'Esta funcionalidade ainda está sendo adicionada. Em breve!',
-        
-        // Calendar Section
-        'calendar.title': 'Agende uma Reunião',
-        'calendar.description': 'Vamos conversar sobre seu projeto e como posso ajudar!',
-
-        // Buy Me a Coffee Section
-        'coffee.title': 'Apoie o Meu Trabalho',
-        'coffee.subtitle': 'Gostando do meu conteúdo?',
-        'coffee.description': 'Se acha o meu trabalho valioso e quer apoiar o que faço, considere comprar-me um café! O seu apoio ajuda-me a continuar a criar conteúdo, projetos open-source e a partilhar conhecimento com a comunidade.',
-        'coffee.cta': 'Comprar um Café',
-        'coffee.badge': 'Cada café conta!',
-        'coffee.feature1': 'Apoiar open-source',
-        'coffee.feature2': 'Financiar novos projetos',
-        'coffee.feature3': 'Impulsionado pela comunidade',
-        'coffee.thanks': 'Obrigado pelo seu apoio!',
-
-        // Connect Section
-        'connect.title': 'Vamos Conectar',
-        'connect.description': 'Sempre interessado em novas oportunidades, colaborações e conversas sobre tecnologia e design.',
-        'connect.email': 'contato.felipe.kreulich@gmail.com',
-        'connect.elsewhere': 'OUTROS SÍTIOS',
-        
-        // About Section
-        'about.title': 'Sobre Mim',
-        'about.description': 'Desenvolvedor Fullstack com experiência em projetos web e mobile de ponta a ponta. Stack principal em Laravel, Next.js, ReactJS, .NET e SwiftUI. Background em cibersegurança e redes.',
-        'about.age': 'Idade',
-        'about.age_value': '23 anos',
-        'about.location_full': 'Lisboa, Portugal',
-        'about.interests': 'Interesses',
-        'about.interests_list': 'Tecnologia, Design, Música, Viagens',
-        'about.available_for': 'Disponível para',
-        'about.available_for_value': 'Freelance & Tempo integral',
-        
-        // Footer
-        'footer.copyright': '© 2025 Felipe Kreulich. Todos os direitos reservados.',
-        'footer.built_with': 'Construído com ❤️ por Felipe Kreulich',
-        'footer.blog': 'Visite meu blog',
-        
-        // Navigation
-        'nav.intro': 'Introdução',
-        'nav.work': 'Trabalho',
-        'nav.projects': 'Projetos',
-        'nav.thoughts': 'Blog',
-        'nav.calendar': 'Agenda',
-        'nav.connect': 'Conectar',
-        'nav.about': 'Sobre',
-        'nav.coffee': 'Café',
-        
-        // Not Found Page
-        'not_found.title': 'Página não encontrada',
-        'not_found.subtitle': '404',
-        'not_found.description': 'A página que você está procurando não existe ou foi movida.',
-        'not_found.back_home': 'Voltar ao início',
-        'not_found.or': 'ou',
-        'not_found.contact': 'entre em contato',
-        'not_found.if_need_help': 'se precisar de ajuda.',
-        
-        // Loading
-        'loading.text': 'Carregando...',
-      }
-    }
-
-    return translations[language][key as keyof typeof translations[Language]] || key
-  }
-
-  return (
-    <LanguageContext.Provider value={{ language, setLanguage, t }}>
-      {children}
-    </LanguageContext.Provider>
+  const setLanguage = useCallback(
+    (next: Language) => {
+      rememberLocale(next)
+      // Troca só o primeiro segmento e preserva o resto do caminho.
+      const rest = pathname.replace(/^\/[^/]+/, '')
+      router.push(`/${next}${rest}`)
+    },
+    [pathname, router],
   )
+
+  const t = useCallback(
+    (key: string): string => {
+      const dictionary = dictionaries[locale] as Record<string, string>
+      return dictionary[key] ?? key
+    },
+    [locale],
+  )
+
+  const value = useMemo(
+    () => ({ language: locale, setLanguage, t }),
+    [locale, setLanguage, t],
+  )
+
+  return <LanguageContext.Provider value={value}>{children}</LanguageContext.Provider>
 }
