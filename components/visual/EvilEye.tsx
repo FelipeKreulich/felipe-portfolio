@@ -2,7 +2,7 @@
 
 /*
   A secção "O olho" — EvilEye, do React Bits, copiado com as mesmas três
-  alterações do Galaxy:
+  alterações:
 
   1. "use client".
   2. Movimento reduzido e visibilidade: frame único e estático com
@@ -261,7 +261,7 @@ export default function EvilEye({
     container.addEventListener("mousemove", onMouseMove)
     container.addEventListener("mouseleave", onMouseLeave)
 
-    // Ver Galaxy.tsx: dimensiona antes do `Program` existir, porque o
+    // Dimensiona antes de o `Program` existir, porque o
     // uniform de resolução lê `gl.canvas.width/height` na criação.
     function sizeCanvas() {
       renderer.setSize(container.offsetWidth, container.offsetHeight)
@@ -294,7 +294,7 @@ export default function EvilEye({
     function resize() {
       sizeCanvas()
       program.uniforms.uResolution.value = [gl.canvas.width, gl.canvas.height, gl.canvas.width / gl.canvas.height]
-      // Ver Galaxy.tsx: sem loop a correr, o resize sozinho não repinta.
+      // Sem loop a correr, o resize sozinho não repinta.
       if (reducedMotion) frame(0)
     }
     window.addEventListener("resize", resize)

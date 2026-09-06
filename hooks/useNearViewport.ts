@@ -8,10 +8,9 @@ import { useEffect, useState, type RefObject } from "react"
  *
  * Existe por causa de um mal-entendido caro sobre o `next/dynamic`: ele adia o
  * *código*, não a montagem. Assim que o chunk chega, o componente monta — mesmo
- * que a secção dele esteja três ecrãs abaixo. Com o Galaxy e o olho, isso
- * significava três contextos WebGL de ecrã inteiro a desenhar enquanto o
- * preloader ainda estava por cima, a competir com ele pela GPU e pelo thread
- * principal.
+ * que a secção dele esteja três ecrãs abaixo. Com o olho, isso significava
+ * um contexto WebGL de ecrã inteiro a desenhar enquanto o preloader ainda
+ * estava por cima, a competir com ele pela GPU e pelo thread principal.
  *
  * Não desmonta ao sair de vista, de propósito: recriar um contexto WebGL é
  * caro e pisca. Quem poupa ciclos com a secção fora do ecrã são os próprios

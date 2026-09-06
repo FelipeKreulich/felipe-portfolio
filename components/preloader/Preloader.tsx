@@ -18,6 +18,14 @@ import ScrambleText from "./ScrambleText"
 
 const NAME = "FELIPE KREULICH"
 
+// DEBUG-TEMP
+function dbg(...a: unknown[]) {
+  console.log(...a)
+  const w = window as unknown as { __dbg?: unknown[] }
+  w.__dbg = w.__dbg || []
+  w.__dbg.push(a)
+}
+
 export default function Preloader() {
   const rootRef = useRef<HTMLDivElement>(null)
   const nameRef = useRef<HTMLSpanElement>(null)
@@ -65,9 +73,22 @@ export default function Preloader() {
 
   // Rede de segurança: fecha na mesma se algum asset ficar preso.
   useEffect(() => {
-    const id = setTimeout(beginExit, SAFETY_TIMEOUT_MS)
-    return () => clearTimeout(id)
+    // DEBUG-TEMP
+    dbg("[dbg] safety-timeout effect (re)armed", { t: performance.now() })
+    const id = setTimeout(() => {
+      dbg("[dbg] safety-timeout FIRED, calling beginExit", { t: performance.now() })
+      beginExit()
+    }, SAFETY_TIMEOUT_MS)
+    return () => {
+      dbg("[dbg] safety-timeout cleared", { t: performance.now() })
+      clearTimeout(id)
+    }
   }, [beginExit])
+
+  // DEBUG-TEMP
+  useEffect(() => {
+    dbg("[dbg] phase changed", { t: performance.now(), phase, resolved, canvasEnabled, reducedMotion })
+  }, [phase, resolved, canvasEnabled, reducedMotion])
 
   // Contador e régua. Escritos direto no DOM, sem passar pelo React: a 60fps
   // um setState por frame seria um re-render por frame.
@@ -101,9 +122,13 @@ export default function Preloader() {
   // Timeline de saída.
   useGSAP(
     () => {
+      // DEBUG-TEMP
+      dbg("[dbg] exit-timeline effect ran", { t: performance.now(), phase, resolved, canvasEnabled, reducedMotion, nameRefExists: !!nameRef.current })
       if (phase !== "exiting" || !resolved) return
 
       const finish = () => {
+        // DEBUG-TEMP
+        dbg("[dbg] finish() called", { t: performance.now() })
         markPreloaderSeen()
         complete()
       }
@@ -121,7 +146,15 @@ export default function Preloader() {
         return
       }
 
-      const split = SplitText.create(nameRef.current, { type: "chars", mask: "chars" })
+      // DEBUG-TEMP
+      let split
+      try {
+        split = SplitText.create(nameRef.current, { type: "chars", mask: "chars" })
+        dbg("[dbg] SplitText.create OK", { t: performance.now(), chars: split.chars.length })
+      } catch (err) {
+        dbg("[dbg-ERR] SplitText.create THREW", err)
+        throw err
+      }
       const tl = gsap.timeline({ onComplete: finish })
 
       tl.to(split.chars, { yPercent: -110, duration: 0.5, stagger: 0.02, ease: "reveal" }, 0)

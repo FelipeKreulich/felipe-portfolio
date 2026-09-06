@@ -9,7 +9,7 @@ import { useNearViewport } from "@/hooks/useNearViewport"
  * secção inteira, porque uma secção sem conteúdo que ainda assim se anuncia
  * a um leitor de ecrã é ruído para quem navega por teclado ou leitor.
  *
- * Lazy com `ssr: false` pela mesma razão do Galaxy em Contact.tsx: é WebGL,
+ * Lazy com `ssr: false`: é WebGL,
  * não existe no servidor, e não deve pesar no primeiro carregamento.
  */
 const EvilEye = dynamic(() => import("@/components/visual/EvilEye"), {

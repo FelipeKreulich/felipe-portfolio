@@ -1,32 +1,22 @@
 "use client"
 
-import dynamic from "next/dynamic"
-import { useRef, useState } from "react"
-import { useNearViewport } from "@/hooks/useNearViewport"
+import { useState } from "react"
 import { socials } from "@/lib/socials"
 import { useLanguage } from "@/contexts/language/LanguageContext"
 
 /**
- * A viragem do site: papel até aqui, tinta a partir daqui. O `KanjiRing` que
- * fechava esta secção saiu — substituído pelo campo de estrelas do Galaxy,
- * que também marca a mudança para escuro.
+ * A viragem do site: papel até aqui, tinta a partir daqui.
  *
- * `next/dynamic` com `ssr: false`: o Galaxy é WebGL puro, não há nada para
- * renderizar no servidor, e não faz sentido pesar no bundle inicial de uma
- * página cuja primeira secção nem o usa. Ver components/canvas/SceneCanvas.tsx
- * para o mesmo padrão.
+ * Esteve aqui um campo de estrelas WebGL a marcar a mudança. Saiu: um
+ * contexto WebGL de ecrã inteiro por trás de seis ligações custava caro para
+ * o que entregava, e esta é a secção onde se quer que a pessoa clique, não
+ * que fique a olhar. O preto liso faz o mesmo trabalho de rutura.
  */
-const Galaxy = dynamic(() => import("@/components/visual/Galaxy"), {
-  ssr: false,
-  loading: () => null,
-})
 
 type EstadoCopia = "nao" | "sim" | "falhou"
 
 export default function Contact() {
   const { t } = useLanguage()
-  const seccaoRef = useRef<HTMLElement>(null)
-  const perto = useNearViewport(seccaoRef)
   const [copiado, setCopiado] = useState<EstadoCopia>("nao")
   const email = t("contact.email")
 
@@ -51,28 +41,9 @@ export default function Contact() {
 
   return (
     <section
-      ref={seccaoRef}
       id="contact"
-      className="relative flex min-h-svh w-full items-center justify-center overflow-hidden bg-ink py-32 text-white"
+      className="relative flex min-h-svh w-full items-center justify-center bg-ink py-32 text-white"
     >
-      {/* `pointer-events-none` para as ligações por cima continuarem
-          clicáveis — isto é fundo, não interface. `saturation={0}` porque o
-          site inteiro é preto, branco e cinzentos: as estrelas por omissão
-          do Galaxy são verdes, e aqui ficam brancas. */}
-      {/* Só monta quando a secção se aproxima. O `next/dynamic` adia o
-          código, não a montagem: sem este guard, o contexto WebGL arrancava
-          com o preloader ainda no ecrã, três ecrãs acima. */}
-      <div className="pointer-events-none absolute inset-0">
-        {perto && <Galaxy
-          saturation={0}
-          density={1}
-          glowIntensity={0.35}
-          twinkleIntensity={0.4}
-          mouseRepulsion
-          transparent
-        />}
-      </div>
-
       <div className="relative flex flex-col items-center px-6 text-center">
         <span className="font-jp text-5xl leading-none" aria-hidden>
           縁
