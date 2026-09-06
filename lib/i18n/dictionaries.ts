@@ -149,19 +149,12 @@ const en = {
     'connect.email': 'contato.felipe.kreulich@gmail.com',
     'connect.elsewhere': 'ELSEWHERE',
     
-    // About Section
-    'about.title': 'About Me',
-    'about.description': 'Fullstack Developer with end-to-end experience in web and mobile projects. Core stack: Laravel, Next.js, ReactJS, .NET and SwiftUI. Background in cybersecurity and networking.',
-    'about.age': 'Age',
-    'about.age_value': '24 years',
-    'about.portrait_alt': 'Portrait of Felipe Kreulich',
-    'about.location': 'Location',
-    'about.location_full': 'Lisboa, Portugal',
-    'about.interests': 'Interests',
-    'about.interests_list': 'Technology, Design, Music, Travel',
-    'about.available_for': 'Available for',
-    'about.available_for_value': 'Freelance & Full-time',
-    
+    // About Section — o prefixo `about.` daqui era da secção de oito ecrãs,
+    // apagada em "feat: três secções novas, oito antigas apagadas"; as
+    // chaves ficaram órfãs no dicionário sem nenhum componente a lê-las.
+    // Removidas para dar lugar às novas, mais abaixo — mantê-las dava
+    // `about.title` duplicado no mesmo objeto, erro duro do TypeScript.
+
     // Footer
     'footer.copyright': '© 2025 Felipe Kreulich. All rights reserved.',
     'footer.built_with': 'Built with ❤️ by Felipe Kreulich',
@@ -265,6 +258,14 @@ const en = {
     // --- Redesenho 2026 ---
     'hero.portrait_alt': 'Illustrated portrait of Felipe Kreulich, white hair and glowing eyes',
 
+    'about.title': 'About',
+    'about.lead': 'I build scalable, secure and fast systems — from the database to the interface.',
+    'about.body': 'I started on the other side of the desk. At AZ Tecnologia e Gestão I supported the public-tender software used by several Brazilian states, and that is where I wrote the first system that mattered: an internal tool that pulled into one place what the team had been hunting for across five. I learned early that a system is judged by whoever has to use it at three in the afternoon on a Tuesday, not by the architecture on the whiteboard.',
+    'about.body_2': 'Since then: at the 9th Army Police Battalion I took the materiel ledger off paper and administered the network while monitoring its vulnerabilities; at CSTC I built school management software now running in more than thirty schools across Portugal. At POP Tecnologia e Mobilidade I own the technical decisions on a ride-hailing product — backend, frontend, iOS, Android, cloud and security.',
+    'about.background': 'Background in cybersecurity and networking. Based in Lisbon, Portugal.',
+    'about.stack_label': 'Stack',
+    'about.stack': 'TypeScript · React · Next.js · Python · PHP · Laravel · .NET · Kotlin · Swift · AWS · PostgreSQL',
+
     'projects.title': 'Projects',
     'contact.title': 'Connect',
     'contact.intro': 'Tell me what you are building.',
@@ -273,6 +274,9 @@ const en = {
     'contact.copied': 'Address copied',
     'contact.copy_failed': 'Select and copy the address',
     'contact.external': 'opens in a new window',
+
+    'footer.made_by': 'Made by Felipe Kreulich',
+    'footer.language': 'Language',
 
     // As máximas do anel. O japonês está em lib/kanji.ts; aqui vive só o
     // texto que o leitor de ecrã lê.
@@ -428,19 +432,8 @@ const pt: Record<keyof typeof en, string> = {
     'connect.email': 'contato.felipe.kreulich@gmail.com',
     'connect.elsewhere': 'OUTROS SÍTIOS',
     
-    // About Section
-    'about.title': 'Sobre Mim',
-    'about.description': 'Desenvolvedor Fullstack com experiência em projetos web e mobile de ponta a ponta. Stack principal em Laravel, Next.js, ReactJS, .NET e SwiftUI. Background em cibersegurança e redes.',
-    'about.age': 'Idade',
-    'about.age_value': '24 anos',
-    'about.portrait_alt': 'Retrato de Felipe Kreulich',
-    'about.location': 'Localização',
-    'about.location_full': 'Lisboa, Portugal',
-    'about.interests': 'Interesses',
-    'about.interests_list': 'Tecnologia, Design, Música, Viagens',
-    'about.available_for': 'Disponível para',
-    'about.available_for_value': 'Freelance & Tempo integral',
-    
+    // About Section — ver a nota equivalente no `en`: chaves órfãs, removidas.
+
     // Footer
     'footer.copyright': '© 2025 Felipe Kreulich. Todos os direitos reservados.',
     'footer.built_with': 'Construído com ❤️ por Felipe Kreulich',
@@ -544,6 +537,14 @@ const pt: Record<keyof typeof en, string> = {
     // --- Redesenho 2026 ---
     'hero.portrait_alt': 'Retrato ilustrado de Felipe Kreulich, cabelo branco e olhos a brilhar',
 
+    'about.title': 'Sobre',
+    'about.lead': 'Construo sistemas escaláveis, seguros e rápidos — da base de dados à interface.',
+    'about.body': 'Comecei do outro lado do balcão. Na AZ Tecnologia e Gestão dava suporte ao software de concursos públicos usado por vários estados brasileiros, e foi aí que escrevi o primeiro sistema que importou: uma ferramenta interna que juntou num sítio só a informação que a equipa andava a procurar em cinco. Aprendi cedo que um sistema se julga por quem tem de o usar às três da tarde de uma terça-feira, não pela arquitetura no quadro.',
+    'about.body_2': 'Desde então: no 9.º Batalhão de Polícia do Exército tirei do papel o registo de material e administrei a rede enquanto lhe vigiava as vulnerabilidades; na CSTC construí software de gestão escolar que corre hoje em mais de trinta escolas em Portugal. Na POP Tecnologia e Mobilidade sou responsável pelas decisões técnicas de uma aplicação de mobilidade — backend, frontend, iOS, Android, cloud e segurança.',
+    'about.background': 'Background em cibersegurança e redes. Lisboa, Portugal.',
+    'about.stack_label': 'Stack',
+    'about.stack': 'TypeScript · React · Next.js · Python · PHP · Laravel · .NET · Kotlin · Swift · AWS · PostgreSQL',
+
     'projects.title': 'Projetos',
     'contact.title': 'Ligações',
     'contact.intro': 'Conta-me o que estás a construir.',
@@ -552,6 +553,9 @@ const pt: Record<keyof typeof en, string> = {
     'contact.copied': 'Endereço copiado',
     'contact.copy_failed': 'Seleciona e copia o endereço',
     'contact.external': 'abre numa janela nova',
+
+    'footer.made_by': 'Feito por Felipe Kreulich',
+    'footer.language': 'Idioma',
 
     'maxim.build_it_yourself': 'Ninguém vem. Constrói tu',
     'maxim.design_for_the_fall': 'Todos os sistemas falham — desenha para a queda',
