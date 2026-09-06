@@ -114,15 +114,13 @@ export async function generateMetadata({
       locale: localeTags[lang].replace("-", "_"),
       type: "website",
     },
-    icons: {
-      icon: [
-        { url: '/icon16.png', sizes: '16x16', type: 'image/png' },
-        { url: '/icon32.png', sizes: '32x32', type: 'image/png' },
-        { url: '/icon96.png', sizes: '96x96', type: 'image/png' },
-      ],
-      shortcut: '/icon32.png',
-      apple: '/icon32.png',
-    },
+    /*
+      Sem bloco `icons` aqui de propósito. O `app/icon.ico` e o
+      `app/apple-icon.png` são convenções de ficheiro do Next e já geram as
+      tags sozinhos, com hash de conteúdo no URL. Declará-los também nos
+      metadados punha duas famílias de ícones no <head> a competir, e era o
+      browser a escolher qual.
+    */
   }
 }
 
