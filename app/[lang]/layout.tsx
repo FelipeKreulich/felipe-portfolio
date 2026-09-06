@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Inter, IBM_Plex_Mono, Noto_Sans_JP } from "next/font/google";
+import localFont from "next/font/local";
 import "../globals.css";
 import { LanguageProvider } from "../../contexts/language/LanguageContext";
 import ReducedMotion from "../../components/ReducedMotion";
@@ -43,6 +44,28 @@ const notoSansJP = Noto_Sans_JP({
   display: "swap",
   preload: false,
   variable: "--font-noto-sans-jp",
+})
+
+/*
+  A fonte do nome. Servida do próprio domínio e não do Google — não existe lá,
+  e é este o único sítio onde o site usa uma fonte que não é de sistema nem do
+  Google.
+
+  Dystopian Canticle, de Scapholène, sob SIL Open Font License 1.1. A licença
+  permite uso comercial, incorporação e serviço a partir do site; exige que o
+  aviso de direitos viaje com o ficheiro, e é por isso que o
+  `license_Dystopian-Canticle.txt` está ao lado dela em `app/fonts/` em vez de
+  ser apagado como lixo do download.
+
+  `display: "block"` e não "swap": o nome é uma palavra só, no centro do ecrã.
+  Trocá-la à vista dava um salto tipográfico enorme no elemento mais visível
+  da página. Bloquear uns milissegundos é o mal menor — e o preloader ainda
+  está por cima quando isto resolve.
+*/
+const dystopianCanticle = localFont({
+  src: "../fonts/Dystopian-Canticle-Regular.otf",
+  display: "block",
+  variable: "--font-dystopian",
 })
 
 /**
@@ -119,7 +142,7 @@ export default async function RootLayout({
       // Servido, não escrito por JavaScript. É esta a diferença entre um
       // crawler saber o idioma da página e não saber.
       lang={localeTags[locale]}
-      className={`${inter.variable} ${ibmPlexMono.variable} ${notoSansJP.variable}`}
+      className={`${inter.variable} ${ibmPlexMono.variable} ${notoSansJP.variable} ${dystopianCanticle.variable}`}
       suppressHydrationWarning
     >
       <body className="font-sans antialiased">

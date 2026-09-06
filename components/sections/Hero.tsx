@@ -37,9 +37,15 @@ export default function Hero() {
           className="w-[54vw] max-w-[20rem] sm:w-[26vw] sm:max-w-[24rem] [filter:grayscale(1)_contrast(1.35)_brightness(0.92)]"
         />
 
-        {/* Encostado à figura: o nome assina por baixo dela em vez de
-            flutuar como um segundo bloco. */}
-        <h1 className="mt-[-3%] text-center font-mono text-[clamp(1.5rem,5.5vw,4.5rem)] leading-[0.86] font-medium tracking-[-0.03em]">
+        {/* O intervalo é `clamp` e não percentagem: uma margem percentual
+            resolve-se contra a *largura* do contentor e não contra a altura,
+            portanto abria e fechava conforme o ecrã em vez de acompanhar a
+            figura. Assim escala com o corpo do nome, que é o que se quer. */}
+        {/* `tracking` positivo e não negativo: a Dystopian Canticle tem
+            hastes que se cruzam e, apertada, os remates das letras tocam-se e
+            o nome deixa de se ler. O aperto da mono não serve a uma fonte
+            desenhada como logótipo. */}
+        <h1 className="font-metal mt-[clamp(1rem,3vw,2.5rem)] text-center text-[clamp(1.75rem,6.5vw,5.5rem)] leading-[0.9] tracking-[0.02em]">
           FELIPE KREULICH
         </h1>
       </div>
