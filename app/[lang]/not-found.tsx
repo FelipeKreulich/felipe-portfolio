@@ -1,65 +1,59 @@
 "use client"
 
-import { useLanguage } from '@/contexts/language/LanguageContext'
-import Link from 'next/link'
-import { ArrowLeft, Mail, Home } from 'lucide-react'
+import Link from "next/link"
+import { useLanguage } from "@/contexts/language/LanguageContext"
 
+/**
+ * A página de quem escreveu o URL ao lado.
+ *
+ * Era a única superfície que tinha sobrado do site anterior — gradientes,
+ * azuis, roxos e manchas desfocadas, com classes `dark:` de um tema que já
+ * não existe. Quem falhasse um endereço caía num sítio que já não era este.
+ *
+ * Papel, tinta e mono, como o resto. O 迷 é o kanji de "perder-se": segue o
+ * mesmo vocabulário do 我, 創 e 縁 das secções, e é a única decoração aqui —
+ * a página não precisa de mais nada para dizer o que tem a dizer.
+ */
 export default function NotFound() {
-  const { t, language } = useLanguage()
+  const { t } = useLanguage()
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
-      <div className="max-w-2xl mx-auto px-6 py-16 text-center">
-        {/* 404 Number */}
-        <div className="mb-8">
-          <h1 className="text-9xl font-bold text-slate-200 dark:text-slate-700 select-none">
-            {t('not_found.subtitle')}
-          </h1>
-        </div>
+    <main className="flex min-h-svh w-full items-center justify-center px-6">
+      <div className="flex max-w-md flex-col items-center text-center">
+        <span className="font-jp text-6xl leading-none opacity-25" aria-hidden>
+          迷
+        </span>
 
-        {/* Main Content */}
-        <div className="mb-12">
-          <h2 className="text-4xl font-bold text-slate-900 dark:text-slate-100 mb-4">
-            {t('not_found.title')}
-          </h2>
-          <p className="text-xl text-slate-600 dark:text-slate-400 leading-relaxed">
-            {t('not_found.description')}
-          </p>
-        </div>
-
-        {/* Action Buttons */}
-        <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
-          <Link
-            href="/"
-            className="group inline-flex h-10 items-center justify-center gap-2 rounded-md bg-primary px-6 text-sm font-medium text-primary-foreground shadow-xs transition-all hover:bg-primary/90"
-          >
-            <Home className="w-4 h-4 group-hover:scale-110 transition-transform" />
-            {t('not_found.back_home')}
-          </Link>
-
-          <div className="flex items-center gap-2 text-slate-500 dark:text-slate-400">
-            <span className="text-sm">{t('not_found.or')}</span>
-            <Link
-              href={`mailto:contato.felipe.kreulich@gmail.com`}
-              className="inline-flex h-10 items-center justify-center gap-2 rounded-md border bg-background px-6 text-sm font-medium shadow-xs transition-all hover:bg-accent hover:text-accent-foreground"
-            >
-              <Mail className="w-4 h-4" />
-              {t('not_found.contact')}
-            </Link>
-          </div>
-        </div>
-
-        {/* Help Text */}
-        <p className="text-sm text-slate-500 dark:text-slate-400">
-          {t('not_found.if_need_help')}
+        <p className="mt-8 font-mono text-xs tracking-[0.22em] uppercase opacity-45">
+          {t("not_found.subtitle")}
         </p>
 
-        {/* Decorative Elements */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-blue-100/20 to-purple-100/20 dark:from-blue-900/20 dark:to-purple-900/20 rounded-full blur-3xl"></div>
-          <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-tr from-green-100/20 to-blue-100/20 dark:from-green-900/20 dark:to-blue-900/20 rounded-full blur-3xl"></div>
+        <h1 className="mt-3 font-mono text-2xl tracking-tight sm:text-3xl">
+          {t("not_found.title")}
+        </h1>
+
+        <p className="mt-5 text-sm leading-relaxed opacity-70">
+          {t("not_found.description")}
+        </p>
+
+        {/* A régua repete a do preloader: 1px, a largura toda, discreta. É a
+            assinatura da casa, e chega para separar o texto da saída. */}
+        <span className="mt-10 h-px w-full bg-black/10" />
+
+        <div className="mt-8 flex flex-wrap items-baseline justify-center gap-x-2 gap-y-1 font-mono text-[10px] tracking-[0.22em] uppercase">
+          <Link href="/" className="opacity-70 transition-opacity hover:opacity-100">
+            {t("not_found.back_home")}
+          </Link>
+          <span className="opacity-35">{t("not_found.or")}</span>
+          <a
+            href={`mailto:${t("contact.email")}`}
+            className="opacity-70 transition-opacity hover:opacity-100"
+          >
+            {t("not_found.contact")}
+          </a>
+          <span className="opacity-35">{t("not_found.if_need_help")}</span>
         </div>
       </div>
-    </div>
+    </main>
   )
 }
