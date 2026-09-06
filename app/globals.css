@@ -67,6 +67,11 @@ html, body {
      hex/rgb/hsl, e estas duas variáveis são tweened por secção. */
   --bg-grid: #14151a;
   --bg-accent: #157c96;
+
+  /* A tinta das três últimas secções (contacto, olho, rodapé). Fixa e não
+     ligada ao `.dark` — a viragem de papel para tinta é do conteúdo, não de
+     um tema que o visitante escolhe; o body continua branco por cima. */
+  --ink: #0a0a0a;
 }
 
 .dark {
@@ -124,6 +129,7 @@ html, body {
   --font-metal: var(--font-dystopian), var(--font-ibm-plex-mono), ui-monospace, monospace;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-ink: var(--ink);
   --color-card: var(--card);
   --color-card-foreground: var(--card-foreground);
   --color-popover: var(--popover);
