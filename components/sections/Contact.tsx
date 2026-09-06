@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import KanjiRing from "@/components/visual/KanjiRing"
 import { socials } from "@/lib/socials"
 import { useLanguage } from "@/contexts/language/LanguageContext"
 
@@ -42,8 +43,15 @@ export default function Contact() {
   return (
     <section
       id="contact"
-      className="relative flex min-h-svh w-full items-center justify-center bg-ink py-32 text-white"
+      className="relative flex min-h-svh w-full items-center justify-center overflow-hidden bg-ink py-32 text-white"
     >
+      {/* O anel fecha o site com o mesmo gesto circular com que o preloader
+          o abre. Maior do que a coluna de texto e cortado pelas margens em
+          ecrã estreito, de propósito: sugere que continua para fora. */}
+      <div className="pointer-events-none absolute top-1/2 left-1/2 aspect-square w-[min(120vw,52rem)] -translate-x-1/2 -translate-y-1/2">
+        <KanjiRing />
+      </div>
+
       <div className="relative flex flex-col items-center px-6 text-center">
         <span className="font-jp text-5xl leading-none" aria-hidden>
           縁

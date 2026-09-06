@@ -90,10 +90,17 @@ export default function Preloader() {
     dbg("[dbg] phase changed", { t: performance.now(), phase, resolved, canvasEnabled, reducedMotion })
   }, [phase, resolved, canvasEnabled, reducedMotion])
 
+  // DEBUG-TEMP
+  useEffect(() => {
+    dbg("[dbg] progress-seen-by-preloader", { t: performance.now(), progress })
+  }, [progress])
+
   // Contador e régua. Escritos direto no DOM, sem passar pelo React: a 60fps
   // um setState por frame seria um re-render por frame.
   useGSAP(
     () => {
+      // DEBUG-TEMP
+      dbg("[dbg] counter-effect ran", { t: performance.now(), progress, readoutCurrent: readout.current.value })
       gsap.to(readout.current, {
         value: progress,
         duration: reducedMotion ? REDUCED_DURATION : 0.6,

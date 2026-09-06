@@ -9,10 +9,10 @@ import { MAXIMS, circlePath, repeatToFit, ringText } from "@/lib/kanji"
 /** Unidades do viewBox. Os raios são relativos a este quadrado. */
 const SIZE = 800
 const CENTER = SIZE / 2
-const OUTER_R = 330
-const INNER_R = 258
+const OUTER_R = 336
+const INNER_R = 268
 /** Corpo dos glifos no anel, nas mesmas unidades. */
-const GLYPH = 13
+const GLYPH = 12
 
 export default function KanjiRing({ className = "" }: { className?: string }) {
   const rootRef = useRef<SVGSVGElement>(null)
@@ -39,7 +39,22 @@ export default function KanjiRing({ className = "" }: { className?: string }) {
         if (!el) return
         gsap.to(el, {
           rotation: graus,
-          transformOrigin: "50% 50%",
+          /*
+            `svgOrigin` e não `transformOrigin`.
+
+            Numa percentagem, o GSAP resolve a origem contra a *caixa
+            delimitadora* do `<g>` — e a caixa de um texto em volta de um
+            círculo não é simétrica: a volta não fecha no ponto onde abre, e
+            os ascendentes e descendentes dos glifos puxam-na para um lado. O
+            centro dessa caixa cai ao lado do centro real, e cada anel passava
+            a rodar à volta do seu próprio erro, em direções opostas — o que
+            se via como dois anéis descentrados a oscilar por trás de círculos
+            de traço que estavam certos.
+
+            O `svgOrigin` recebe coordenadas do sistema do próprio SVG, que é
+            onde o centro é conhecido e exato.
+          */
+          svgOrigin: `${CENTER} ${CENTER}`,
           ease: "none",
           scrollTrigger: {
             trigger: rootRef.current,
@@ -76,7 +91,7 @@ export default function KanjiRing({ className = "" }: { className?: string }) {
         r={OUTER_R}
         fill="none"
         stroke="currentColor"
-        strokeOpacity={0.14}
+        strokeOpacity={0.2}
       />
       <circle
         cx={CENTER}
@@ -84,17 +99,17 @@ export default function KanjiRing({ className = "" }: { className?: string }) {
         r={INNER_R}
         fill="none"
         stroke="currentColor"
-        strokeOpacity={0.14}
+        strokeOpacity={0.2}
       />
 
       <g ref={outerRef}>
-        <text className="font-jp" fontSize={GLYPH} fill="currentColor" fillOpacity={0.5}>
+        <text className="font-jp" fontSize={GLYPH} fill="currentColor" fillOpacity={0.6}>
           <textPath href={`#${outerId}`}>{repeatToFit(volta, OUTER_R, GLYPH)}</textPath>
         </text>
       </g>
 
       <g ref={innerRef}>
-        <text className="font-jp" fontSize={GLYPH} fill="currentColor" fillOpacity={0.24}>
+        <text className="font-jp" fontSize={GLYPH} fill="currentColor" fillOpacity={0.3}>
           <textPath href={`#${innerId}`}>{repeatToFit(volta, INNER_R, GLYPH)}</textPath>
         </text>
       </g>
