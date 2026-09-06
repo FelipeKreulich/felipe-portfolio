@@ -3,14 +3,6 @@
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react"
 import { hasWebGL, isLowPowerDevice } from "@/lib/device"
 
-// DEBUG-TEMP
-function dbg(...a: unknown[]) {
-  console.log(...a)
-  const w = window as unknown as { __dbg?: unknown[] }
-  w.__dbg = w.__dbg || []
-  w.__dbg.push(a)
-}
-
 /** Duração para onde todas as timelines colapsam com reduced-motion. */
 export const REDUCED_DURATION = 0.15
 
@@ -66,8 +58,6 @@ export default function ReducedMotion({ children }: { children: ReactNode }) {
     }
 
     apply()
-    // DEBUG-TEMP
-    dbg("[dbg] ReducedMotion apply", { t: performance.now(), reduce: query.matches, webgl: hasWebGL(), low: isLowPowerDevice() })
     query.addEventListener("change", apply)
     return () => query.removeEventListener("change", apply)
   }, [])

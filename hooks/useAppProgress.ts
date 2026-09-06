@@ -4,14 +4,6 @@ import { useEffect, useState } from "react"
 import { usePreloaderStore } from "@/store/usePreloaderStore"
 import { useMotionPrefs } from "@/components/ReducedMotion"
 
-// DEBUG-TEMP
-function dbg(...a: unknown[]) {
-  console.log(...a)
-  const w = window as unknown as { __dbg?: unknown[] }
-  w.__dbg = w.__dbg || []
-  w.__dbg.push(a)
-}
-
 /**
  * Progresso real de carregamento, sem nada temporizado.
  *
@@ -63,8 +55,6 @@ export function useAppProgress() {
     // Sem Canvas não há progresso de cena por que esperar, senão o preloader
     // ficava preso nos 70% em dispositivos sem WebGL.
     const combined = canvasEnabled ? domProgress * 0.7 + sceneProgress * 0.3 : domProgress
-    // DEBUG-TEMP
-    dbg("[dbg] useAppProgress", { t: performance.now(), domProgress, sceneProgress, canvasEnabled, resolved, combined })
     setProgress(combined)
   }, [domProgress, sceneProgress, canvasEnabled, resolved, setProgress])
 }

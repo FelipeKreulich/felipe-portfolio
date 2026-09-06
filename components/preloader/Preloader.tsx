@@ -13,18 +13,11 @@ import {
   MIN_VISIBLE_MS,
   RETURNING_VISIBLE_MS,
   SAFETY_TIMEOUT_MS,
+  EXIT_FALLBACK_MS,
 } from "@/store/usePreloaderStore"
 import ScrambleText from "./ScrambleText"
 
 const NAME = "FELIPE KREULICH"
-
-// DEBUG-TEMP
-function dbg(...a: unknown[]) {
-  console.log(...a)
-  const w = window as unknown as { __dbg?: unknown[] }
-  w.__dbg = w.__dbg || []
-  w.__dbg.push(a)
-}
 
 export default function Preloader() {
   const rootRef = useRef<HTMLDivElement>(null)
@@ -73,34 +66,14 @@ export default function Preloader() {
 
   // Rede de segurança: fecha na mesma se algum asset ficar preso.
   useEffect(() => {
-    // DEBUG-TEMP
-    dbg("[dbg] safety-timeout effect (re)armed", { t: performance.now() })
-    const id = setTimeout(() => {
-      dbg("[dbg] safety-timeout FIRED, calling beginExit", { t: performance.now() })
-      beginExit()
-    }, SAFETY_TIMEOUT_MS)
-    return () => {
-      dbg("[dbg] safety-timeout cleared", { t: performance.now() })
-      clearTimeout(id)
-    }
+    const id = setTimeout(beginExit, SAFETY_TIMEOUT_MS)
+    return () => clearTimeout(id)
   }, [beginExit])
-
-  // DEBUG-TEMP
-  useEffect(() => {
-    dbg("[dbg] phase changed", { t: performance.now(), phase, resolved, canvasEnabled, reducedMotion })
-  }, [phase, resolved, canvasEnabled, reducedMotion])
-
-  // DEBUG-TEMP
-  useEffect(() => {
-    dbg("[dbg] progress-seen-by-preloader", { t: performance.now(), progress })
-  }, [progress])
 
   // Contador e régua. Escritos direto no DOM, sem passar pelo React: a 60fps
   // um setState por frame seria um re-render por frame.
   useGSAP(
     () => {
-      // DEBUG-TEMP
-      dbg("[dbg] counter-effect ran", { t: performance.now(), progress, readoutCurrent: readout.current.value })
       gsap.to(readout.current, {
         value: progress,
         duration: reducedMotion ? REDUCED_DURATION : 0.6,
@@ -129,16 +102,23 @@ export default function Preloader() {
   // Timeline de saída.
   useGSAP(
     () => {
-      // DEBUG-TEMP
-      dbg("[dbg] exit-timeline effect ran", { t: performance.now(), phase, resolved, canvasEnabled, reducedMotion, nameRefExists: !!nameRef.current })
       if (phase !== "exiting" || !resolved) return
 
       const finish = () => {
-        // DEBUG-TEMP
-        dbg("[dbg] finish() called", { t: performance.now() })
         markPreloaderSeen()
         complete()
       }
+
+      // Rede de segurança da própria saída, e não só da entrada: a timeline
+      // abaixo corre a reboque de requestAnimationFrame, e o browser suspende
+      // esses frames numa aba oculta ou em segundo plano (DevTools destacado,
+      // separador trocado, janela minimizada). Nesse caso o `onComplete` da
+      // timeline nunca dispara e o overlay ficava preso a opacity:1 sem
+      // limite — foi assim que o bug original se reproduziu. Isto corre por
+      // `setTimeout`, que o browser atrasa mas não suspende indefinidamente,
+      // por isso sai à mesma. Nas condições normais a timeline chama `finish`
+      // bem antes disto, e a limpeza abaixo cancela este temporizador.
+      const hardExitId = window.setTimeout(finish, EXIT_FALLBACK_MS)
 
       // Sem movimento, ou sem Canvas para dissolver: o overlay só desaparece.
       if (reducedMotion || !canvasEnabled) {
@@ -150,18 +130,10 @@ export default function Preloader() {
           ease: "none",
           onComplete: finish,
         })
-        return
+        return () => window.clearTimeout(hardExitId)
       }
 
-      // DEBUG-TEMP
-      let split
-      try {
-        split = SplitText.create(nameRef.current, { type: "chars", mask: "chars" })
-        dbg("[dbg] SplitText.create OK", { t: performance.now(), chars: split.chars.length })
-      } catch (err) {
-        dbg("[dbg-ERR] SplitText.create THREW", err)
-        throw err
-      }
+      const split = SplitText.create(nameRef.current, { type: "chars", mask: "chars" })
       const tl = gsap.timeline({ onComplete: finish })
 
       tl.to(split.chars, { yPercent: -110, duration: 0.5, stagger: 0.02, ease: "reveal" }, 0)
@@ -176,6 +148,7 @@ export default function Preloader() {
         .to(rootRef.current, { autoAlpha: 0, duration: 0.35, ease: "none" }, 0.85)
 
       return () => {
+        window.clearTimeout(hardExitId)
         tl.kill()
         split.revert()
       }

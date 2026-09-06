@@ -18,6 +18,16 @@ export const RETURNING_VISIBLE_MS = 400
 /** Rede de segurança: fecha na mesma se algo ficar preso a carregar. */
 export const SAFETY_TIMEOUT_MS = 4000
 
+/**
+ * Segunda rede, para depois de `beginExit`: a timeline de saída em si corre a
+ * reboque de `requestAnimationFrame`, que o browser suspende numa aba oculta
+ * ou em segundo plano — sem frames, o `onComplete` da timeline nunca dispara
+ * e o overlay ficava preso a `opacity: 1` sem limite. Folgado em relação à
+ * timeline real (~1.2s no caminho completo), para nunca cortar a coreografia
+ * em condições normais.
+ */
+export const EXIT_FALLBACK_MS = 2000
+
 const SESSION_KEY = "preloader-seen"
 
 /** O sessionStorage rebenta em modo privado nalguns browsers. */

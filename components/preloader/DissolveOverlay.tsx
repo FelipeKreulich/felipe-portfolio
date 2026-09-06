@@ -10,14 +10,6 @@ import { dissolveBus } from "@/store/dissolveBus"
 import { usePreloaderStore } from "@/store/usePreloaderStore"
 import { resolveCssColor } from "@/lib/cssColor"
 
-// DEBUG-TEMP
-function dbg(...a: unknown[]) {
-  console.log(...a)
-  const w = window as unknown as { __dbg?: unknown[] }
-  w.__dbg = w.__dbg || []
-  w.__dbg.push(a)
-}
-
 /**
  * O quad de dissolve. Vive dentro do <Canvas> e nunca desmonta: durante o
  * preloader é a cortina, depois da saída fica como fundo do hero a 15%.
@@ -73,8 +65,6 @@ export default function DissolveOverlay() {
   useEffect(() => {
     // Um shader procedural não põe nada na fila do loader. Nesse caso o sinal
     // honesto é o material estar compilado, o que acontece ao primeiro frame.
-    // DEBUG-TEMP
-    dbg("[dbg] DissolveOverlay useProgress", { t: performance.now(), progress, total })
     setSceneProgress(total === 0 ? 1 : progress / 100)
   }, [progress, total, setSceneProgress])
 
