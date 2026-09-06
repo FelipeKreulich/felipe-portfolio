@@ -58,7 +58,6 @@ const en = {
     'work.az.description': 'Support on the public-tender software used by several Brazilian states. For the support team itself I built an internal tool that pulled into one place the information that until then lived scattered across several.',
     
     // Projects Section
-    'projects.title': 'Featured Projects',
     'projects.description': 'A selection of my recent work and personal projects.',
     'projects.portfolio.title': 'Portfolio Website',
     'projects.portfolio.description': 'Modern portfolio built with Next.js, TypeScript, and Tailwind CSS. Features dark/light theme, multilingual support, and responsive design.',
@@ -262,6 +261,27 @@ const en = {
     
     // Loading
     'loading.text': 'Loading...',
+
+    // --- Redesenho 2026 ---
+    'hero.portrait_alt': 'Illustrated portrait of Felipe Kreulich, white hair and glowing eyes',
+
+    'projects.title': 'Projects',
+    'contact.title': 'Connect',
+    'contact.intro': 'Tell me what you are building.',
+    'contact.email': 'contato.felipe.kreulich@gmail.com',
+    'contact.copy': 'Copy address',
+    'contact.copied': 'Address copied',
+    'contact.copy_failed': 'Select and copy the address',
+    'contact.external': 'opens in a new window',
+
+    // As máximas do anel. O japonês está em lib/kanji.ts; aqui vive só o
+    // texto que o leitor de ecrã lê.
+    'maxim.build_it_yourself': 'No one is coming. Build it yourself',
+    'maxim.design_for_the_fall': 'Every system fails — design for the fall',
+    'maxim.discipline': 'Discipline outlives motivation',
+    'maxim.silence': 'Silence, then execution',
+    'maxim.rebuild': 'Break it, understand it, rebuild it better',
+    'maxim.abyss': 'The abyss stares back. Ship anyway',
 } as const
 
 /**
@@ -317,7 +337,6 @@ const pt: Record<keyof typeof en, string> = {
     'work.az.description': 'Suporte ao software de licitação usado por vários estados do Brasil. Para a própria equipa de suporte, desenvolvi internamente uma ferramenta que juntou num só sítio a informação que até aí andava dispersa por vários.',
     
     // Projects Section
-    'projects.title': 'Projetos em Destaque',
     'projects.description': 'Uma seleção dos meus trabalhos recentes e projetos pessoais.',
     'projects.portfolio.title': 'Website Portfolio',
     'projects.portfolio.description': 'Portfolio moderno construído com Next.js, TypeScript e Tailwind CSS. Inclui tema escuro/claro, suporte multilíngue e design responsivo.',
@@ -521,6 +540,25 @@ const pt: Record<keyof typeof en, string> = {
     
     // Loading
     'loading.text': 'Carregando...',
+
+    // --- Redesenho 2026 ---
+    'hero.portrait_alt': 'Retrato ilustrado de Felipe Kreulich, cabelo branco e olhos a brilhar',
+
+    'projects.title': 'Projetos',
+    'contact.title': 'Ligações',
+    'contact.intro': 'Conta-me o que estás a construir.',
+    'contact.email': 'contato.felipe.kreulich@gmail.com',
+    'contact.copy': 'Copiar endereço',
+    'contact.copied': 'Endereço copiado',
+    'contact.copy_failed': 'Seleciona e copia o endereço',
+    'contact.external': 'abre numa janela nova',
+
+    'maxim.build_it_yourself': 'Ninguém vem. Constrói tu',
+    'maxim.design_for_the_fall': 'Todos os sistemas falham — desenha para a queda',
+    'maxim.discipline': 'A disciplina dura mais do que a motivação',
+    'maxim.silence': 'Silêncio, e depois execução',
+    'maxim.rebuild': 'Parte, percebe, reconstrói melhor',
+    'maxim.abyss': 'O abismo devolve o olhar. Publica na mesma',
 }
 
 export const dictionaries = { en, pt } as const
