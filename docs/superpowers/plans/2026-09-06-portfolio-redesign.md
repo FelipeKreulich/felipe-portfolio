@@ -270,19 +270,32 @@ test("lerpColor limita t fora de [0,1]", () => {
 })
 
 /**
- * A regressão do bug do React Bits. No original, o valor de partida da
- * interpolação era a string CSS que ela própria tinha produzido na frame
- * anterior; o parser de hex devolvia null e a transição congelava ao fim de
- * um passo. Aqui a sequência inteira tem de chegar ao destino.
+ * A regressão do bug do React Bits, com a forma que o componente lhe dá:
+ * uma célula com estado, um passo por frame.
+ *
+ * O que partia no original era o valor de partida ser a string CSS que a
+ * própria interpolação tinha produzido na frame anterior. Aqui o `from`
+ * fica em hex e o `css` é só valor de pintura — se alguém voltar a
+ * realimentar um com o outro, o `lerpColor` rebenta e este teste cai.
+ *
+ * Passar sempre os mesmos dois literais em cada iteração não serviria: o
+ * `hexToRgb` nunca chegaria a ver nada que não fosse hex, e o teste passava
+ * de igual maneira com o bug presente.
  */
-test("uma sequência de passos de 0.06 acaba na cor de destino", () => {
-  let p = 0
-  let css = ""
-  while (p < 1) {
-    p = Math.min(1, p + 0.06)
-    css = lerpColor("#0a0a0a", "#9a9a9a", p)
+test("uma célula interpolada frame a frame chega à cor de destino", () => {
+  const cell = { from: "#0a0a0a", to: "#9a9a9a", css: "#0a0a0a", p: 0 }
+  let pintadas = 0
+
+  for (let frame = 0; frame < 30 && cell.p < 1; frame++) {
+    cell.p = Math.min(1, cell.p + 0.06)
+    cell.css = lerpColor(cell.from, cell.to, cell.p)
+    pintadas++
   }
-  assert.equal(css, "rgb(154, 154, 154)")
+
+  assert.equal(cell.p, 1)
+  assert.equal(cell.css, "rgb(154, 154, 154)")
+  // 17 e não 1: no bug original só a primeira frame é que pintava.
+  assert.equal(pintadas, 17)
 })
 
 test("lerpColor recusa entradas que não sejam hex", () => {
@@ -402,10 +415,23 @@ export function gridFor(width: number, height: number) {
 Run: `node --test lib/glitch.test.ts`
 Expected: `pass 9`, `fail 0`
 
-- [ ] **Step 5: Commit**
+- [ ] **Step 5: Dar um comando canónico aos testes**
+
+Sem `"type"` no `package.json`, o Node avisa `MODULE_TYPELESS_PACKAGE_JSON` a cada execução, e output de testes com ruído deixa de servir como evidência. Declarar `"type"` não é opção — partia a deteção de módulos do resto do projeto. Silenciar só este aviso, sim.
+
+Acrescentar ao `scripts` do `package.json`:
+
+```json
+    "test": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --test lib/",
+```
+
+Run: `npm test`
+Expected: `pass 9`, `fail 0`, e **nenhuma linha de aviso** no output.
+
+- [ ] **Step 6: Commit**
 
 ```bash
-git add lib/glitch.ts lib/glitch.test.ts
+git add lib/glitch.ts lib/glitch.test.ts package.json
 git commit -m "feat: matemática do LetterGlitch com testes"
 ```
 
@@ -1734,8 +1760,8 @@ git commit -m "chore: remover ~20 dependências que deixaram de ser usadas"
 
 - [ ] **Step 1: Correr os testes todos**
 
-Run: `node --test lib/`
-Expected: `pass 15`, `fail 0`
+Run: `npm test`
+Expected: `pass 15`, `fail 0`, e nenhuma linha de aviso no output.
 
 - [ ] **Step 2: Confirmar que as duas rotas são estáticas**
 

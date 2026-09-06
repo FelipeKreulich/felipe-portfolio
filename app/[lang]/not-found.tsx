@@ -2,7 +2,6 @@
 
 import { useLanguage } from '@/contexts/language/LanguageContext'
 import Link from 'next/link'
-import { Button } from '@/components/ui/button'
 import { ArrowLeft, Mail, Home } from 'lucide-react'
 
 export default function NotFound() {
@@ -30,24 +29,23 @@ export default function NotFound() {
 
         {/* Action Buttons */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
-          <Button asChild size="lg" className="group">
-            <Link href="/" className="flex items-center gap-2">
-              <Home className="w-4 h-4 group-hover:scale-110 transition-transform" />
-              {t('not_found.back_home')}
-            </Link>
-          </Button>
-          
+          <Link
+            href="/"
+            className="group inline-flex h-10 items-center justify-center gap-2 rounded-md bg-primary px-6 text-sm font-medium text-primary-foreground shadow-xs transition-all hover:bg-primary/90"
+          >
+            <Home className="w-4 h-4 group-hover:scale-110 transition-transform" />
+            {t('not_found.back_home')}
+          </Link>
+
           <div className="flex items-center gap-2 text-slate-500 dark:text-slate-400">
             <span className="text-sm">{t('not_found.or')}</span>
-            <Button variant="outline" size="lg" asChild>
-              <Link 
-                href={`mailto:contato.felipe.kreulich@gmail.com`}
-                className="flex items-center gap-2"
-              >
-                <Mail className="w-4 h-4" />
-                {t('not_found.contact')}
-              </Link>
-            </Button>
+            <Link
+              href={`mailto:contato.felipe.kreulich@gmail.com`}
+              className="inline-flex h-10 items-center justify-center gap-2 rounded-md border bg-background px-6 text-sm font-medium shadow-xs transition-all hover:bg-accent hover:text-accent-foreground"
+            >
+              <Mail className="w-4 h-4" />
+              {t('not_found.contact')}
+            </Link>
           </div>
         </div>
 

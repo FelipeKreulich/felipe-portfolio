@@ -1,19 +1,13 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { Inter, IBM_Plex_Mono } from "next/font/google";
+import { Inter, IBM_Plex_Mono, Noto_Sans_JP } from "next/font/google";
 import "../globals.css";
 import { LanguageProvider } from "../../contexts/language/LanguageContext";
-import ClientLayout from "../../components/client/ClientLayout";
 import ReducedMotion from "../../components/ReducedMotion";
-import FooterServer from "@/components/footer/FooterServer";
-import ScrollRhythm from "@/components/ScrollRhythm";
 import SmoothScroll from "../../components/SmoothScroll";
 import SceneCanvas from "../../components/canvas/SceneCanvas";
 import Preloader from "../../components/preloader/Preloader";
 import LanguageGate from "../../components/language/LanguageGate";
-import GridBackground from "../../components/background/GridBackground";
-import SectionGridColors from "../../components/background/SectionGridColors";
-import { ThemeScript } from "../theme-script";
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import { config } from "@/lib/config";
 import { dictionaries } from "@/lib/i18n/dictionaries";
@@ -32,6 +26,23 @@ const ibmPlexMono = IBM_Plex_Mono({
   weight: ["400", "500"],
   display: "swap",
   variable: "--font-ibm-plex-mono",
+})
+
+/*
+  O japonês é a identidade do site, não um detalhe. Sem esta fonte o browser
+  cai para a CJK do sistema — Hiragino no Mac, Yu Gothic no Windows — e o
+  site muda de cara conforme o sistema operativo.
+
+  `preload: false` porque a Noto Sans JP chega particionada em dezenas de
+  ficheiros por unicode-range: pré-carregá-los todos seria pior do que não
+  pré-carregar nenhum.
+*/
+const notoSansJP = Noto_Sans_JP({
+  subsets: ["latin"],
+  weight: ["400"],
+  display: "swap",
+  preload: false,
+  variable: "--font-noto-sans-jp",
 })
 
 /**
@@ -108,35 +119,20 @@ export default async function RootLayout({
       // Servido, não escrito por JavaScript. É esta a diferença entre um
       // crawler saber o idioma da página e não saber.
       lang={localeTags[locale]}
-      className={`${inter.variable} ${ibmPlexMono.variable}`}
+      className={`${inter.variable} ${ibmPlexMono.variable} ${notoSansJP.variable}`}
       suppressHydrationWarning
     >
-      <head>
-        <ThemeScript />
-      </head>
       <body className="font-sans antialiased">
-        {/* Decide uma vez se há movimento e se o Canvas monta; tudo o que anima
-            lê essa decisão daqui. */}
+        {/* Decide uma vez se há movimento e se o Canvas monta; tudo o que
+            anima lê essa decisão daqui. */}
         <ReducedMotion>
-          {/* Grelha reativa, por trás de tudo. Um canvas 2D, sem contexto
-              WebGL, a correr no mesmo ticker do GSAP que conduz o Lenis. */}
-          <GridBackground />
-          <SectionGridColors />
           <SceneCanvas />
           <Preloader />
           <LanguageGate current={locale} />
           <LanguageProvider locale={locale}>
-            <ClientLayout>
-              {children}
-              {/*
-                O rodapé vive no layout e não na página: é do site inteiro, e
-                aqui é servidor — o que permite ler o GitHub no build sem
-                mandar o visitante bater numa API de terceiros.
-              */}
-              <FooterServer />
-              <ScrollRhythm />
-              <SpeedInsights />
-            </ClientLayout>
+            <SmoothScroll />
+            {children}
+            <SpeedInsights />
           </LanguageProvider>
         </ReducedMotion>
       </body>
