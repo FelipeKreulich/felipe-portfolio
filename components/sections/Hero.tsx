@@ -45,7 +45,7 @@ export default function Hero() {
             hastes que se cruzam e, apertada, os remates das letras tocam-se e
             o nome deixa de se ler. O aperto da mono não serve a uma fonte
             desenhada como logótipo. */}
-        <h1 className="font-metal mt-[clamp(1rem,3vw,2.5rem)] text-center text-[clamp(1.75rem,6.5vw,5.5rem)] leading-[0.9] tracking-[0.02em]">
+        <h1 className="font-metal mt-[clamp(1rem,3vw,2.5rem)] text-center text-[clamp(2.5rem,9vw,8rem)] leading-[0.9] tracking-[0.02em]">
           FELIPE KREULICH
         </h1>
       </div>

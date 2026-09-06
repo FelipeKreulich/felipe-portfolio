@@ -83,14 +83,32 @@ export default function Projects() {
 
           <div className="hidden lg:block">
             <div className="sticky top-24">
-              <Image
-                key={mostrado.slug}
-                src={mostrado.preview.src}
-                alt={t(mostrado.preview.altKey)}
-                width={mostrado.preview.width}
-                height={mostrado.preview.height}
-                className="w-full grayscale"
-              />
+              {/* As três empilhadas, e a troca é opacidade em vez de
+                  remontagem. Com `key` na imagem, a antiga desmontava no mesmo
+                  frame em que a nova entrava — e a nova ainda estava por
+                  descarregar, portanto via-se o corte e o buraco. Empilhadas,
+                  as três já estão em memória e o cruzamento é contínuo. */}
+              <div className="relative aspect-[1919/963] overflow-hidden">
+                {projects.map((projeto) => {
+                  const visivel = projeto.slug === ativo
+                  return (
+                    <Image
+                      key={projeto.slug}
+                      src={projeto.preview.src}
+                      /* Só a visível se anuncia: três alts em simultâneo
+                         faziam o leitor de ecrã ler os três projetos de cada
+                         vez que o rato passasse por uma linha. */
+                      alt={visivel ? t(projeto.preview.altKey) : ""}
+                      aria-hidden={!visivel}
+                      fill
+                      sizes="22rem"
+                      className={`object-cover grayscale transition-opacity duration-[600ms] ease-out motion-reduce:transition-none ${
+                        visivel ? "opacity-100" : "opacity-0"
+                      }`}
+                    />
+                  )
+                })}
+              </div>
 
               <p className="mt-5 max-w-prose text-sm leading-relaxed opacity-70">
                 {t(mostrado.outcomeKey)}

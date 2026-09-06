@@ -33,7 +33,13 @@ interface LetterGlitchProps {
   diferente, e o canvas remontava-se a cada render. Quem chamar este
   componente com literais inline sofre o mesmo — daí o aviso.
 */
-const DEFAULT_COLORS = ["#0a0a0a", "#6b6b6b", "#9a9a9a"]
+/*
+  Cinzentos e não tinta cheia. Isto foi afinado num mockup de 16:9 pequeno,
+  onde cabiam ~50 colunas de glifos; num ecrã real são ~130, e a mesma
+  densidade com tinta a 100% lê-se como um muro de texto a competir com o
+  nome. O fundo tem de ser textura, não conteúdo.
+*/
+const DEFAULT_COLORS = ["#4a4a4a", "#8f8f8f", "#c2c2c2"]
 
 /** Fração de células que muda em cada tick. */
 const CHURN = 0.045
@@ -201,7 +207,7 @@ export default function LetterGlitch({
         <div
           className="pointer-events-none absolute inset-0"
           style={{
-            background: `radial-gradient(ellipse 46% 62% at 50% 50%, rgba(${PAPER},0.97) 0%, rgba(${PAPER},0.7) 52%, rgba(${PAPER},0) 78%)`,
+            background: `radial-gradient(ellipse 62% 74% at 50% 50%, rgba(${PAPER},0.98) 0%, rgba(${PAPER},0.93) 34%, rgba(${PAPER},0.6) 62%, rgba(${PAPER},0) 88%)`,
           }}
         />
       )}
