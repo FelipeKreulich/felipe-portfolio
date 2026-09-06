@@ -274,6 +274,8 @@ const en = {
     'contact.copied': 'Address copied',
     'contact.copy_failed': 'Select and copy the address',
     'contact.external': 'opens in a new window',
+    'contact.cv': 'Download résumé',
+    'contact.cv_note': 'PDF',
 
     'footer.made_by': 'Made by Felipe Kreulich',
     'footer.language': 'Language',
@@ -553,6 +555,8 @@ const pt: Record<keyof typeof en, string> = {
     'contact.copied': 'Endereço copiado',
     'contact.copy_failed': 'Seleciona e copia o endereço',
     'contact.external': 'abre numa janela nova',
+    'contact.cv': 'Descarregar currículo',
+    'contact.cv_note': 'PDF',
 
     'footer.made_by': 'Feito por Felipe Kreulich',
     'footer.language': 'Idioma',

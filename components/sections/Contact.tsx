@@ -14,10 +14,20 @@ import { useLanguage } from "@/contexts/language/LanguageContext"
  * que fique a olhar. O preto liso faz o mesmo trabalho de rutura.
  */
 
+/*
+  Um PDF por idioma. Fica aqui e não no dicionário: é um caminho de ficheiro,
+  não texto traduzível — pô-lo no dicionário convidava a que alguém lhe
+  "traduzisse" o nome e partisse a ligação em silêncio.
+*/
+const CURRICULO: Record<string, string> = {
+  pt: "/curriculo.pdf",
+  en: "/curriculoenglish.pdf",
+}
+
 type EstadoCopia = "nao" | "sim" | "falhou"
 
 export default function Contact() {
-  const { t } = useLanguage()
+  const { t, language } = useLanguage()
   const [copiado, setCopiado] = useState<EstadoCopia>("nao")
   const email = t("contact.email")
 
@@ -100,6 +110,23 @@ export default function Contact() {
             {copiado === "nao" ? "" : legenda}
           </span>
         </div>
+
+        {/*
+          O currículo, no idioma da rota.
+
+          Há quem precise do PDF para o anexar a um processo interno, e não o
+          ter à mão custa candidaturas que nunca se chega a saber que se
+          perderam. Fica discreto: quem quer, encontra; quem não quer, não
+          tropeça nele.
+        */}
+        <a
+          href={CURRICULO[language] ?? CURRICULO.en}
+          download
+          className="mt-10 flex items-baseline gap-2 font-mono text-[10px] tracking-[0.22em] uppercase opacity-45 transition-opacity hover:opacity-80 focus-visible:opacity-80"
+        >
+          <span>{t("contact.cv")}</span>
+          <span className="opacity-60">{t("contact.cv_note")}</span>
+        </a>
       </div>
     </section>
   )
