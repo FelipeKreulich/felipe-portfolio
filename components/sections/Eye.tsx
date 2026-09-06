@@ -1,6 +1,8 @@
 "use client"
 
 import dynamic from "next/dynamic"
+import { useRef } from "react"
+import { useNearViewport } from "@/hooks/useNearViewport"
 
 /**
  * Secção puramente decorativa: só o olho, sem texto nenhum. `aria-hidden` na
@@ -16,8 +18,12 @@ const EvilEye = dynamic(() => import("@/components/visual/EvilEye"), {
 })
 
 export default function Eye() {
+  const seccaoRef = useRef<HTMLElement>(null)
+  const perto = useNearViewport(seccaoRef)
+
   return (
-    <section id="eye" aria-hidden className="h-svh w-full bg-ink">
+    <section ref={seccaoRef}
+      id="eye" aria-hidden className="h-svh w-full bg-ink">
       {/* Única exceção à regra de "sem cor" do site: o utilizador pediu
           explicitamente o azul dos olhos do Gojo (Jujutsu Kaisen), à mão e
           não amostrado do avatar — os azuis daquela imagem são
@@ -27,7 +33,7 @@ export default function Eye() {
           maneira, e é nas bordas da íris que o azul se lê. O componente
           recebe a tinta em hex e não via a variável CSS — o valor entra num
           uniform do shader, não numa propriedade de estilo. */}
-      <EvilEye eyeColor="#6EC8F5" intensity={0.9} backgroundColor="#0a0a0a" />
+      {perto && <EvilEye eyeColor="#6EC8F5" intensity={0.9} backgroundColor="#0a0a0a" />}
     </section>
   )
 }
