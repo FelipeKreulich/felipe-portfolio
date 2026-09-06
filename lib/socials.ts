@@ -1,9 +1,9 @@
 /**
- * As ligações do rodapé.
+ * As ligações do contacto.
  *
- * Sem cores de marca. Quatro paletas alheias no mesmo bloco desfaziam a
- * identidade que o site inteiro construiu — e ainda por cima no fim. Todas
- * entram na paleta do site, com o acento reservado ao hover.
+ * Sem cores de marca e sem logótipos. Quatro identidades visuais alheias no
+ * mesmo bloco desfaziam a do site — e ainda por cima no fim. A lista é
+ * tipográfica: plataforma em mono, handle ao lado.
  */
 export interface Social {
   /** Escrito em maiúsculas no mono da esquerda. */
@@ -38,5 +38,17 @@ export const socials: Social[] = [
     handle: "@kreulich.dev",
     url: "https://www.instagram.com/kreulich.dev/",
     nome: "Instagram, @kreulich.dev",
+  },
+  {
+    plataforma: "Blog",
+    handle: "kreulich-blog",
+    url: "https://kreulich-blog.vercel.app",
+    nome: "Blog, kreulich-blog.vercel.app",
+  },
+  {
+    plataforma: "Buy me a coffee",
+    handle: "felipekreulich",
+    url: "https://buymeacoffee.com/felipekreulich",
+    nome: "Buy me a coffee, felipekreulich",
   },
 ]
