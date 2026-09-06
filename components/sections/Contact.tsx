@@ -1,17 +1,27 @@
 "use client"
 
+import dynamic from "next/dynamic"
 import { useState } from "react"
-import KanjiRing from "@/components/visual/KanjiRing"
 import { socials } from "@/lib/socials"
 import { useLanguage } from "@/contexts/language/LanguageContext"
 
+/**
+ * A viragem do site: papel até aqui, tinta a partir daqui. O `KanjiRing` que
+ * fechava esta secção saiu — substituído pelo campo de estrelas do Galaxy,
+ * que também marca a mudança para escuro.
+ *
+ * `next/dynamic` com `ssr: false`: o Galaxy é WebGL puro, não há nada para
+ * renderizar no servidor, e não faz sentido pesar no bundle inicial de uma
+ * página cuja primeira secção nem o usa. Ver components/canvas/SceneCanvas.tsx
+ * para o mesmo padrão.
+ */
+const Galaxy = dynamic(() => import("@/components/visual/Galaxy"), {
+  ssr: false,
+  loading: () => null,
+})
+
 type EstadoCopia = "nao" | "sim" | "falhou"
 
-/**
- * O anel fecha o site com o mesmo gesto circular com que o preloader o abre.
- * As ligações vivem dentro dele, em texto: sem logótipos, para não trazer de
- * volta quatro identidades visuais que o resto do site não tem.
- */
 export default function Contact() {
   const { t } = useLanguage()
   const [copiado, setCopiado] = useState<EstadoCopia>("nao")
@@ -39,12 +49,21 @@ export default function Contact() {
   return (
     <section
       id="contact"
-      className="relative flex min-h-svh w-full items-center justify-center overflow-hidden py-32"
+      className="relative flex min-h-svh w-full items-center justify-center overflow-hidden bg-ink py-32 text-white"
     >
-      {/* Maior do que a coluna de texto, e cortado pelas margens em ecrã
-          estreito — de propósito: sugere que continua para fora. */}
-      <div className="pointer-events-none absolute top-1/2 left-1/2 aspect-square w-[min(120vw,52rem)] -translate-x-1/2 -translate-y-1/2">
-        <KanjiRing />
+      {/* `pointer-events-none` para as ligações por cima continuarem
+          clicáveis — isto é fundo, não interface. `saturation={0}` porque o
+          site inteiro é preto, branco e cinzentos: as estrelas por omissão
+          do Galaxy são verdes, e aqui ficam brancas. */}
+      <div className="pointer-events-none absolute inset-0">
+        <Galaxy
+          saturation={0}
+          density={1}
+          glowIntensity={0.35}
+          twinkleIntensity={0.4}
+          mouseRepulsion
+          transparent
+        />
       </div>
 
       <div className="relative flex flex-col items-center px-6 text-center">
