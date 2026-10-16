@@ -1,72 +1,30 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { Inter, IBM_Plex_Mono, Noto_Sans_JP } from "next/font/google";
-import localFont from "next/font/local";
+import { Bricolage_Grotesque } from "next/font/google";
 import "../globals.css";
 import { LanguageProvider } from "../../contexts/language/LanguageContext";
-import ReducedMotion from "../../components/ReducedMotion";
-import SmoothScroll from "../../components/SmoothScroll";
-import SceneCanvas from "../../components/canvas/SceneCanvas";
-import Preloader from "../../components/preloader/Preloader";
-import LanguageGate from "../../components/language/LanguageGate";
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import { config } from "@/lib/config";
 import { dictionaries } from "@/lib/i18n/dictionaries";
 import { isLocale, locales, localeTags, type Locale } from "@/lib/i18n/config";
 
-const inter = Inter({
+/*
+  Uma família só. A Bricolage Grotesque tem eixo de largura e de tamanho
+  óptico: o nome usa-a estreita e grande, o texto corrido larga e pequena,
+  e as duas leem-se como vozes diferentes da mesma pessoa.
+*/
+const bricolage = Bricolage_Grotesque({
   subsets: ["latin"],
   display: "swap",
-  variable: "--font-inter",
-})
-
-// O IBM Plex Mono não tem versão variável, por isso os pesos são explícitos.
-// Dois chegam: 400 para o contador e a régua, 500 para o nome.
-const ibmPlexMono = IBM_Plex_Mono({
-  subsets: ["latin"],
-  weight: ["400", "500"],
-  display: "swap",
-  variable: "--font-ibm-plex-mono",
+  axes: ["opsz", "wdth"],
+  variable: "--font-bricolage",
 })
 
 /*
-  O japonês é a identidade do site, não um detalhe. Sem esta fonte o browser
-  cai para a CJK do sistema — Hiragino no Mac, Yu Gothic no Windows — e o
-  site muda de cara conforme o sistema operativo.
-
-  `preload: false` porque a Noto Sans JP chega particionada em dezenas de
-  ficheiros por unicode-range: pré-carregá-los todos seria pior do que não
-  pré-carregar nenhum.
+  Corre antes da primeira pintura, para quem escolheu escuro nunca ver um
+  flash de claro. Sem escolha guardada, segue o sistema.
 */
-const notoSansJP = Noto_Sans_JP({
-  subsets: ["latin"],
-  weight: ["400"],
-  display: "swap",
-  preload: false,
-  variable: "--font-noto-sans-jp",
-})
-
-/*
-  A fonte do nome. Servida do próprio domínio e não do Google — não existe lá,
-  e é este o único sítio onde o site usa uma fonte que não é de sistema nem do
-  Google.
-
-  Dystopian Canticle, de Scapholène, sob SIL Open Font License 1.1. A licença
-  permite uso comercial, incorporação e serviço a partir do site; exige que o
-  aviso de direitos viaje com o ficheiro, e é por isso que o
-  `license_Dystopian-Canticle.txt` está ao lado dela em `app/fonts/` em vez de
-  ser apagado como lixo do download.
-
-  `display: "block"` e não "swap": o nome é uma palavra só, no centro do ecrã.
-  Trocá-la à vista dava um salto tipográfico enorme no elemento mais visível
-  da página. Bloquear uns milissegundos é o mal menor — e o preloader ainda
-  está por cima quando isto resolve.
-*/
-const dystopianCanticle = localFont({
-  src: "../fonts/Dystopian-Canticle-Regular.otf",
-  display: "block",
-  variable: "--font-dystopian",
-})
+const themeScript = `try{var t=localStorage.getItem("theme");if(t==="dark"||(!t&&matchMedia("(prefers-color-scheme: dark)").matches))document.documentElement.classList.add("dark")}catch(e){}`
 
 /**
  * Este é o layout raiz. Vive dentro do segmento `[lang]` de propósito: é o que
@@ -113,13 +71,12 @@ export async function generateMetadata({
       url: `${base}/${lang}`,
       locale: localeTags[lang].replace("-", "_"),
       type: "website",
+      images: ["/felipe.jpg"],
     },
     /*
       Sem bloco `icons` aqui de propósito. O `app/icon.ico` e o
       `app/apple-icon.png` são convenções de ficheiro do Next e já geram as
-      tags sozinhos, com hash de conteúdo no URL. Declará-los também nos
-      metadados punha duas famílias de ícones no <head> a competir, e era o
-      browser a escolher qual.
+      tags sozinhos, com hash de conteúdo no URL.
     */
   }
 }
@@ -140,22 +97,18 @@ export default async function RootLayout({
       // Servido, não escrito por JavaScript. É esta a diferença entre um
       // crawler saber o idioma da página e não saber.
       lang={localeTags[locale]}
-      className={`${inter.variable} ${ibmPlexMono.variable} ${notoSansJP.variable} ${dystopianCanticle.variable}`}
+      className={bricolage.variable}
+      // O script do tema mexe na classe antes de o React hidratar.
       suppressHydrationWarning
     >
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+      </head>
       <body className="font-sans antialiased">
-        {/* Decide uma vez se há movimento e se o Canvas monta; tudo o que
-            anima lê essa decisão daqui. */}
-        <ReducedMotion>
-          <SceneCanvas />
-          <Preloader />
-          <LanguageGate current={locale} />
-          <LanguageProvider locale={locale}>
-            <SmoothScroll />
-            {children}
-            <SpeedInsights />
-          </LanguageProvider>
-        </ReducedMotion>
+        <LanguageProvider locale={locale}>
+          {children}
+          <SpeedInsights />
+        </LanguageProvider>
       </body>
     </html>
   );

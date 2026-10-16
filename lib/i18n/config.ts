@@ -1,4 +1,4 @@
-/** Idiomas suportados. A ordem define a ordem no ecrã de escolha. */
+/** Idiomas suportados. A ordem define a ordem no seletor do topo. */
 export const locales = ["pt", "en"] as const
 
 export type Locale = (typeof locales)[number]
@@ -21,19 +21,35 @@ export const localeNames: Record<Locale, string> = {
   en: "English",
 }
 
-/**
- * Bandeira de fundo no hover, no ecrã de escolha.
- *
- * Nota: uma bandeira representa um país, não uma língua. A do Reino Unido, dos
- * EUA ou da Irlanda representam o inglês igualmente mal — e o navegador desta
- * máquina reporta `en-GB`. Ficam aqui isoladas para serem fáceis de trocar ou
- * remover.
- */
-export const localeFlags: Record<Locale, string> = {
-  pt: "/flag-pt.webp",
-  en: "/flag-en.webp",
-}
-
 export function isLocale(value: string): value is Locale {
   return (locales as readonly string[]).includes(value)
 }
+
+/**
+ * Escolhe o idioma a partir do `Accept-Language`.
+ *
+ * "pt-PT,pt;q=0.9,en;q=0.8" -> pt. Compara-se pela subtag primária, para
+ * `pt-PT` e `pt-BR` baterem com `pt`.
+ */
+export function negotiateLocale(header: string | null): Locale {
+  if (!header) return defaultLocale
+
+  const ranked = header
+    .split(",")
+    .map((part) => {
+      const [tag, ...params] = part.trim().split(";")
+      const q = params.find((p) => p.trim().startsWith("q="))
+      return { tag: tag.toLowerCase(), q: q ? Number.parseFloat(q.split("=")[1]) : 1 }
+    })
+    .sort((a, b) => b.q - a.q)
+
+  for (const { tag } of ranked) {
+    const match = locales.find((locale) => locale === tag.split("-")[0])
+    if (match) return match
+  }
+
+  return defaultLocale
+}
+
+/** Cookie escrito pelo seletor de idioma e lido pelo `proxy.ts`. */
+export const LOCALE_COOKIE = "locale"

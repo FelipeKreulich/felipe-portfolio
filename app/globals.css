@@ -1,205 +1,84 @@
 @import "tailwindcss";
 
-/* `clip` em vez de `hidden`: o `hidden` transforma o elemento em scroll
-   container, o que quebra `position: sticky` nos descendentes e desalinha o
-   pinning do ScrollTrigger. O `clip` corta na mesma, sem criar o container. */
-html, body {
-  overflow-x: clip;
+/* O tema escuro é uma classe no <html>, posta pelo script do layout antes da
+   primeira pintura — não a media query, para o botão do topo poder mandar. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/*
+  Cinzento frio com um fio de verde, das plantas da fotografia. Sem cor de
+  destaque: o único ponto de cor da página é o verde de "disponível", e é a
+  própria fotografia que dá o calor.
+*/
+:root {
+  color-scheme: light;
+  --background: #f2f3f0;
+  --foreground: #161917;
+  --muted: #5d6560;
+  --line: #d9dcd7;
+  --available: #2e7d55;
 }
 
-:root {
-  /* Resíduo do tema shadcn original. Só sobrevivem porque a 404
-     (app/[lang]/not-found.tsx) ainda usa `bg-primary`, `text-primary-foreground`,
-     `hover:bg-accent` e `hover:text-accent-foreground` — essa página não foi
-     redesenhada com as seis secções. */
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  /* Só a scrollbar lê isto diretamente (não há `text-muted-foreground` nem
-     `bg-muted-foreground` em lado nenhum). */
-  --muted-foreground: oklch(0.556 0 0);
-  --border: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  /* Só serve para derivar `--radius-md` (o `rounded-md` da 404). */
-  --radius: 0.625rem;
-  /*
-     Papel morno, não branco puro.
-
-     O branco absoluto é uma escolha dura: a secção Manifesto, que é um ecrã
-     inteiro de trama sobre o fundo, ficava a brilhar ao lado do resto do site.
-     O croma é mínimo (0.008) — chega para tirar o clínico sem virar bege.
-  */
-  --background: oklch(0.977 0.008 85);
-  --foreground: oklch(0.145 0 0);
-
-  /* Preloader (tema claro). Segue o tema do site, mas com um contraste um
-     pouco mais fundo que o `--background`: o ecrã de entrada é uma cortina que
-     abre para o hero, não a mesma superfície. */
-  --preloader-bg: #FAFAFB;
-  --preloader-fg: oklch(0.145 0 0);
-  /* Ciano escurecido e mais saturado. O tom claro que funciona sobre preto
-     desaparece por completo sobre branco. */
-  --preloader-accent: oklch(0.62 0.13 220);
-
-  /* A tinta das três últimas secções (contacto, olho, rodapé). Fixa e não
-     ligada ao `.dark` — a viragem de papel para tinta é do conteúdo, não de
-     um tema que o visitante escolhe; o body continua branco por cima. */
-  --ink: #0a0a0a;
+.dark {
+  color-scheme: dark;
+  --background: #111412;
+  --foreground: #e6e9e5;
+  --muted: #8e9691;
+  --line: #262b28;
+  --available: #6cc896;
 }
 
 @theme inline {
-  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
-  --font-mono: var(--font-ibm-plex-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
-  --font-jp: var(--font-noto-sans-jp), "Hiragino Sans", "Yu Gothic", ui-monospace, monospace;
-  /* Só o nome na hero. O recuo é a mono do resto do site e não uma serifa
-     qualquer: se a fonte falhar a carregar, o nome cai para a linguagem da
-     página em vez de para algo que ali nunca esteve. */
-  --font-metal: var(--font-dystopian), var(--font-ibm-plex-mono), ui-monospace, monospace;
+  --font-sans: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --color-ink: var(--ink);
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-border: var(--border);
-  --color-ring: var(--ring);
-  /* `rounded-md` é a única utility desta escala usada (na 404). */
-  --radius-md: calc(var(--radius) - 2px);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-available: var(--available);
 }
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    @apply border-line;
   }
+
   body {
     @apply bg-background text-foreground;
-
-    /*
-      Arrastar o cursor deixa de pintar texto de azul.
-
-      Sem isto, qualquer gesto sobre a hero, o percurso ou a faixa de stack
-      acabava com meia página seleccionada — as interações do site são todas
-      de arrastar e passar o cursor, nunca de ler com o rato.
-    */
-    -webkit-user-select: none;
-    user-select: none;
-
-    /*
-      O rubber band do fim da página conta como scroll e dispara refreshes do
-      ScrollTrigger — que se vêem como saltos. Cortar o overscroll vertical
-      não afecta o momentum, só o estica-e-volta das bordas.
-    */
-    overscroll-behavior-y: none;
+    transition: background-color 0.3s ease, color 0.3s ease;
   }
 
-  /*
-    O que existe para ser copiado continua a poder ser copiado: campos de
-    formulário (onde `none` partiria a escrita), e tudo o que marcar
-    `data-selectable` — endereços de email, comandos, números.
-  */
-  input,
-  textarea,
-  [contenteditable],
-  [data-selectable] {
-    -webkit-user-select: text;
-    user-select: text;
+  ::selection {
+    background: var(--foreground);
+    color: var(--background);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--foreground);
+    outline-offset: 3px;
+    border-radius: 2px;
   }
 }
 
-/* Custom scrollbar */
+/*
+  O único movimento que ninguém pediu: a intro entra uma vez, por ordem —
+  nome, fotografia, texto. O resto da página está quieto.
+*/
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+}
+
+@utility rise {
+  animation: rise 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  animation-delay: var(--delay, 0s);
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+}
+
 * {
   scrollbar-width: thin;
-  scrollbar-color: color-mix(in oklch, var(--muted-foreground) 50%, transparent) transparent;
-}
-
-::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
-}
-
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-::-webkit-scrollbar-thumb {
-  background-color: color-mix(in oklch, var(--muted-foreground) 50%, transparent);
-  border-radius: 999px;
-  border: 2px solid var(--background);
-  background-clip: padding-box;
-  transition: background-color 0.3s ease;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background-color: var(--foreground);
-}
-
-::-webkit-scrollbar-corner {
-  background: transparent;
-}
-
-/* Adding missing fade-in-up animation */
-@layer utilities {
-  .animate-fade-in-up {
-    animation: fadeInUp 0.8s ease-out forwards;
-  }
-
-  @keyframes fadeInUp {
-    from {
-      opacity: 0;
-      transform: translateY(30px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  /* Custom slow spin animation for CyberSecurity button */
-  .animate-spin-slow {
-    animation: spinSlow 3s linear infinite;
-  }
-
-  @keyframes spinSlow {
-    from {
-      transform: rotate(0deg);
-    }
-    to {
-      transform: rotate(360deg);
-    }
-  }
-
-  /* Custom duration utilities */
-  .duration-1200 {
-    transition-duration: 1200ms;
-  }
-
-  /* Blob animation for blog section */
-  .animate-blob {
-    animation: blob 7s infinite;
-  }
-
-  .animation-delay-2000 {
-    animation-delay: 2s;
-  }
-
-  .animation-delay-4000 {
-    animation-delay: 4s;
-  }
-
-  @keyframes blob {
-    0% {
-      transform: translate(0px, 0px) scale(1);
-    }
-    33% {
-      transform: translate(30px, -50px) scale(1.1);
-    }
-    66% {
-      transform: translate(-20px, 20px) scale(0.9);
-    }
-    100% {
-      transform: translate(0px, 0px) scale(1);
-    }
-  }
+  scrollbar-color: color-mix(in oklch, var(--muted) 50%, transparent) transparent;
 }
