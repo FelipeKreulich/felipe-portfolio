@@ -1,5 +1,7 @@
 "use client"
 
+import { Fragment } from "react"
+
 import Image from "next/image"
 import Link from "next/link"
 import { useSyncExternalStore, type CSSProperties } from "react"
@@ -80,7 +82,21 @@ export default function Intro() {
           <div className="rise md:col-span-7 md:col-start-6" style={{ "--delay": "0.24s" } as CSSProperties}>
             <p className="text-muted">{t("intro.role")}</p>
             <p className="mt-3 max-w-[38rem] text-xl leading-relaxed text-pretty sm:text-2xl sm:leading-snug">
-              {t("intro.bio")}
+              {t("intro.bio").split("Solvion").map((part, i) => (
+                <Fragment key={i}>
+                  {i > 0 && (
+                    <a
+                      href="https://solvion.pt"
+                      target="_blank"
+                      rel="noreferrer"
+                      className="font-medium text-available underline decoration-1 underline-offset-4 transition-colors hover:decoration-2"
+                    >
+                      Solvion
+                    </a>
+                  )}
+                  {part}
+                </Fragment>
+              ))}
             </p>
 
             <p className="mt-8 flex items-center gap-2.5 text-sm">
