@@ -66,7 +66,7 @@ export default function Footer() {
               </li>
             ))}
           </ul>
-          <p className="text-muted">© {new Date().getFullYear()} Felipe Kreulich</p>
+          <p className="text-muted">{new Date().getFullYear()} Felipe Kreulich</p>
         </div>
       </div>
     </footer>
